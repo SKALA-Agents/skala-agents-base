@@ -265,9 +265,3 @@
 - 장재훈 : LangGraph 설계, start-up search, Agent Pattern 설계
 - 김유빈 : 아키텍처 설계, 기술 조사, Agent Pattern 설계
 - 양예원 : 투자 판단 평가 기준 설계, 투자 보고서 template 작성, 조사 agent prompting 작성
-
-<<<<<<< HEAD
----
-=======
----
->>>>>>> 8ff3444 ([FEAT] 하이브리드 검색과 보고서 품질 개선)
