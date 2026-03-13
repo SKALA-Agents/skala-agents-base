@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 class ServiceConfig(BaseModel):
     domain: str = "AI Semiconductor"
-    md_glob: str = "*.md"
+    companies: list[str] = Field(default_factory=list)
     chunk_size: int = 1200
     chunk_overlap: int = 200
     retrieval_k: int = 6
@@ -15,11 +15,34 @@ class ServiceConfig(BaseModel):
     llm_model: str = "gpt-4.1-mini"
     temperature: float = 0.1
     top_k_companies: int = 3
-    recommendation_threshold: int = 20
+    recommendation_threshold: int = 60
+    web_search_results: int = 5
+    web_request_timeout: int = 30
+    max_page_chars: int = 6000
+    max_research_urls_per_company: int = 5
 
 
 class CompanyList(BaseModel):
     companies: list[str] = Field(default_factory=list)
+
+
+class ResearchSource(BaseModel):
+    title: str
+    url: str
+    snippet: str = ""
+
+
+class CompanyResearch(BaseModel):
+    company_name: str
+    summary: str
+    product_overview: str
+    technology_overview: str
+    business_model: str
+    traction: str
+    team: str
+    competition: str
+    risks: list[str]
+    references: list[ResearchSource]
 
 
 class AgentEvaluation(BaseModel):
@@ -55,13 +78,19 @@ class CompanyEvaluation(BaseModel):
             + self.competition_score
         )
 
+    @property
+    def normalized_score(self) -> int:
+        return round((self.total_score / 30) * 100)
+
 
 class GraphState(BaseModel):
     domain: str
+    input_companies: list[str] = Field(default_factory=list)
     source_files: list[str] = Field(default_factory=list)
     market_context: str = ""
     market_analysis: str = ""
     companies: list[str] = Field(default_factory=list)
+    company_research: dict[str, dict[str, Any]] = Field(default_factory=dict)
     company_contexts: dict[str, str] = Field(default_factory=dict)
     technology_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     market_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)

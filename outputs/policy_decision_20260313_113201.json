@@ -1,0 +1,211 @@
+{
+  "decision": "top3",
+  "reason": "100점 환산 점수 60점 이상 기업이 존재하여 상위 3개를 추천 대상으로 선정했습니다.",
+  "selected_companies": [
+    {
+      "company_name": "NVIDIA",
+      "thesis": "NVIDIA는 첨단 AI 반도체 기술과 차세대 하드웨어 개발 역량을 바탕으로 대규모 AI 스타트업 투자 및 인수를 통해 AI 생태계를 확장하며 시장 지배력을 강화하는 선도 기업이다.",
+      "technology_score": 5,
+      "market_score": 5,
+      "business_score": 5,
+      "team_score": 5,
+      "risk_score": 4,
+      "competition_score": 5,
+      "strengths": [
+        "첨단 AI 반도체 기술과 차세대 하드웨어 개발 역량 보유",
+        "AI 스타트업에 대한 대규모 투자 및 인수를 통한 생태계 확장과 시장 지배력 강화",
+        "Vera Rubin 시스템과 Groq 인수 등 전략적 M&A를 통한 기술적 우위 확보"
+      ],
+      "risks": [
+        "AI 반도체 시장 내 경쟁 심화로 인한 기술 및 시장 점유율 유지 어려움",
+        "대규모 투자에 따른 재무적 부담 및 투자 회수 불확실성",
+        "기술 혁신 속도 유지 및 통합 과정에서의 운영 리스크"
+      ],
+      "diligence_questions": [
+        "Vera Rubin 시스템의 구체적인 기술적 차별점과 경쟁사 대비 우위는 무엇인가?",
+        "Groq 인수 후 통합 전략과 시너지 효과 창출 계획은 어떻게 되는가?",
+        "대규모 투자에 따른 재무 건전성 및 현금 흐름 관리 방안은 무엇인가?",
+        "경쟁 심화 상황에서 NVIDIA가 기술 혁신과 시장 리더십을 지속하기 위한 구체적 전략은 무엇인가?",
+        "팀 구성과 핵심 인재들의 전문성 및 경력에 대한 구체적인 정보는 무엇인가?"
+      ],
+      "total_score": 29,
+      "normalized_score": 97,
+      "company_research": {
+        "company_name": "NVIDIA",
+        "summary": "NVIDIA는 AI 반도체 분야에서 선도적인 기업으로, 차세대 AI 시스템과 칩 개발에 집중하고 있으며, 다양한 AI 스타트업에 대규모 투자를 진행하고 있다.",
+        "product_overview": "NVIDIA는 Vera Rubin 시스템과 같은 차세대 AI 하드웨어를 개발하여 대규모 AI 모델 훈련과 맞춤형 AI 플랫폼을 지원한다. 또한, AI 칩 스타트업 Groq를 약 200억 달러에 인수하는 등 AI 칩 제품군을 확장하고 있다.",
+        "technology_overview": "NVIDIA는 고성능 AI 반도체 기술을 바탕으로 대규모 AI 모델 훈련을 위한 시스템을 제공하며, Vera Rubin 시스템과 같은 첨단 하드웨어를 개발하고 있다. 또한, AI 생태계 구축을 위해 다양한 AI 연구 및 인프라 기업에 투자하고 있다.",
+        "business_model": "NVIDIA는 자체 AI 하드웨어 및 소프트웨어 제품 판매뿐만 아니라, AI 스타트업에 대한 전략적 투자와 인수를 통해 AI 생태계를 확장하고, 이를 통해 자사 제품 수요를 창출하는 비즈니스 모델을 운영한다.",
+        "traction": "최근 2년간 100개 이상의 AI 스타트업에 투자했으며, 2025년에는 400억 달러 이상의 투자 활동을 통해 AI 개발에 적극 참여하고 있다. Groq 인수는 NVIDIA의 최대 규모 인수 사례이다.",
+        "team": "정보 부족",
+        "competition": "정보 부족",
+        "risks": [
+          "AI 반도체 시장 경쟁 심화",
+          "대규모 투자에 따른 재무 리스크",
+          "기술 혁신 속도 유지 필요성"
+        ],
+        "references": [
+          {
+            "title": "NVIDIA and Thinking Machines Lab announce multiyear strategic partnership",
+            "url": "https://blogs.nvidia.com/blog/nvidia-thinking-machines-lab/",
+            "snippet": "NVIDIA and Thinking Machines Lab announced today a multiyear strategic partnership to deploy at least one gigawatt of next-generation NVIDIA Vera Rubin systems to support Thinking Machines' frontier model training and platforms delivering customizable AI at scale."
+          },
+          {
+            "title": "Nvidia company profile on Tracxn",
+            "url": "https://tracxn.com/d/companies/nvidia/__Rwvr9cCWEygAYAiBEK0RuL1AbkKNw9sBGPqMEY6zVh4",
+            "snippet": "Explore Nvidia's in-depth company profile, including funding details, key investors, leadership, competitors, and acquisitions."
+          },
+          {
+            "title": "Nvidia buying AI chip startup Groq for about $20 billion",
+            "url": "https://www.cnbc.com/2025/12/24/nvidia-buying-ai-chip-startup-groq-for-about-20-billion-biggest-deal.html",
+            "snippet": "Nvidia is making its largest purchase ever, acquiring assets from 9-year-old chip startup Groq for about $20 billion."
+          },
+          {
+            "title": "Nvidia's 2025 AI startup investments",
+            "url": "https://aifundingtracker.com/nvidia-startup-investments/",
+            "snippet": "Conclusion Nvidia's 2025 investment activity shows its role in AI development. The company made direct investments and joined funding rounds worth over $40 billion. These investments span from research companies to practical infrastructure providers. The strategy creates an ecosystem that needs Nvidia products."
+          },
+          {
+            "title": "Nvidia's AI empire and top startup investments",
+            "url": "https://techcrunch.com/2026/01/02/nvidias-ai-empire-a-look-at-its-top-startup-investments/",
+            "snippet": "Over the last two years, Nvidia has used its ballooning fortunes to invest in over 100 AI startups. Here are the giant semiconductor's largest investments."
+          }
+        ]
+      }
+    },
+    {
+      "company_name": "Groq",
+      "thesis": "Groq는 AI 추론용 반도체 및 컴퓨팅 인프라 분야에서 클라우드와 온프레미스 솔루션을 제공하며, 대규모 투자 유치와 높은 기업 가치로 시장 신뢰를 확보해 AI 컴퓨팅 파워 부족 문제를 해결하는 선도 기업이다.",
+      "technology_score": 4,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 4,
+      "competition_score": 4,
+      "strengths": [
+        "대규모 투자 유치와 높은 기업 가치로 시장 신뢰 확보",
+        "클라우드 및 온프레미스 모두 지원하는 유연한 AI 인프라 솔루션 제공",
+        "고성능 AI 칩과 컴퓨팅 인프라를 통한 AI 워크로드 최적화"
+      ],
+      "risks": [
+        "AI 칩 및 컴퓨팅 파워 시장에서 경쟁 심화 가능성",
+        "기술 개발과 시장 확장에 따른 높은 자본 소모 위험",
+        "고객 수요 변동에 따른 매출 불확실성"
+      ],
+      "diligence_questions": [
+        "Groq의 AI 칩 기술이 경쟁사 대비 가지는 구체적인 차별점은 무엇인가?",
+        "현재 제품의 완성도와 실제 고객 도입 사례는 어떻게 되는가?",
+        "경쟁 심화와 자본 소모 위험에 대응하기 위한 구체적인 전략은 무엇인가?"
+      ],
+      "total_score": 25,
+      "normalized_score": 83,
+      "company_research": {
+        "company_name": "Groq",
+        "summary": "Groq는 AI 추론 분야의 선도 기업으로, AI 워크로드를 위한 칩과 컴퓨팅 파워 부족 문제를 해결하는 데 주력하고 있습니다. 2025년 9월에 7억 5천만 달러의 자금을 조달하며 69억 달러의 기업 가치를 인정받았습니다.",
+        "product_overview": "Groq는 클라우드 기반 솔루션인 GroqCloud와 온프레미스 옵션을 제공하여 유연하고 고성능의 AI 인프라를 기업에 제공합니다.",
+        "technology_overview": "정보 부족",
+        "business_model": "Groq는 클라우드 및 온프레미스 AI 인프라 솔루션을 통해 기업 고객에게 고성능 컴퓨팅 서비스를 제공하며, 투자 유치를 통해 기술 스택을 고도화하고 시장 확장을 추진하고 있습니다.",
+        "traction": "2025년 9월 7억 5천만 달러의 신규 투자 유치와 69억 달러의 기업 가치 평가를 받으며, 주요 투자자로는 Disruptive, Blackrock, Neuberger Berman, DTCP 등이 참여했습니다. 또한 Cisco Investments, Samsung Catalyst Fund, BlackRock Private Equity Partners 등이 과거 투자자로 참여했습니다.",
+        "team": "CEO Jonathan Ross가 이끌고 있으며, 구체적인 팀 구성에 대한 정보는 부족합니다.",
+        "competition": "정보 부족",
+        "risks": [
+          "AI 칩 및 컴퓨팅 파워 시장의 경쟁 심화 가능성",
+          "기술 개발 및 시장 확장에 따른 자본 소모 위험",
+          "고객 수요 변동에 따른 매출 불확실성"
+        ],
+        "references": [
+          {
+            "title": "AI chip startup Groq raises $750 million at $6.9 billion valuation",
+            "url": "https://www.bloomberg.com/news/articles/2025-09-17/ai-chip-startup-groq-raises-750-million-at-6-9-billion-valuation",
+            "snippet": "Groq Inc. raised $750 million at a post- funding valuation of $6.9 billion, highlighting investor interest in companies seeking to alleviate a shortage of chips and computing power for AI workloads."
+          },
+          {
+            "title": "Groq raises $750 million as inference demand surges",
+            "url": "https://groq.com/newsroom/groq-raises-750-million-as-inference-demand-surges",
+            "snippet": "The investment strengthens Groq's role in the American AI Stack, delivering fast, affordable compute worldwide. Mountain View, CA — September 17, 2025 — Groq , the pioneer in AI inference, today announced $750 million in new financing at a post-money valuation of $6.9 billion."
+          },
+          {
+            "title": "Nvidia rival Groq grabs $750M at $6.9B valuation to scale inference infrastructure",
+            "url": "https://techfundingnews.com/nvidia-rival-groq-grabs-750m-at-6-9b-valuation-to-scale-inference-infrastructure/",
+            "snippet": "The company provides both cloud-based solutions through GroqCloud and on-premises options, appealing to enterprises looking for flexible, high-performance AI infrastructure."
+          },
+          {
+            "title": "Groq the AI chip startup worth US $2.8bn",
+            "url": "https://aimagazine.com/machine-learning/groq-the-ai-chip-startup-worth-us-2-8bn",
+            "snippet": "Led by Cisco Investments, Samsung Catalyst Fund and BlackRock Private Equity Partners, the funding round has brought Groq's total valuation to US$2.8bn. The new funding will go towards boosting the company's capacity for compute required to run complex AI systems, according to CEO Jonathan Ross."
+          },
+          {
+            "title": "Nvidia AI chip challenger Groq raises even more than expected, hits $6.9B valuation",
+            "url": "https://techcrunch.com/2025/09/17/nvidia-ai-chip-challenger-groq-raises-even-more-than-expected-hits-6-9b-valuation/",
+            "snippet": "AI chip startup Groq confirmed Wednesday that it raised a fresh $750 million in funding at a post-money valuation of $6.9 billion."
+          }
+        ]
+      }
+    },
+    {
+      "company_name": "SambaNova Systems",
+      "thesis": "SambaNova Systems는 최첨단 5나노 공정 기반 1,040코어 AI 추론 칩과 AI 소프트웨어-하드웨어 통합 솔루션을 통해 AI 반도체 시장에서 기술적 우위와 강력한 투자자 네트워크를 바탕으로 성장 가능성이 높은 기업이다.",
+      "technology_score": 4,
+      "market_score": 4,
+      "business_score": 4,
+      "team_score": 5,
+      "risk_score": 4,
+      "competition_score": 4,
+      "strengths": [
+        "TSMC 5나노 공정 기반 1,040코어 AI 추론 칩 개발로 기술적 우위 확보",
+        "인텔, 구글 벤처스, 블랙록 등 주요 투자자 및 파트너와의 협력으로 자본 및 생태계 구축 강점",
+        "AI 소프트웨어와 하드웨어를 통합 제공하는 비즈니스 모델로 고객 맞춤형 솔루션 제공 가능"
+      ],
+      "risks": [
+        "AI 반도체 시장 내 246개 경쟁사 존재로 인한 경쟁 심화",
+        "TSMC 등 파운드리 의존에 따른 공급망 리스크 및 대규모 자본 조달 부담",
+        "빠른 기술 변화와 시장 점유율 확보의 어려움"
+      ],
+      "diligence_questions": [
+        "SN40L 칩의 실제 성능 및 경쟁사 대비 차별화된 기술 요소는 무엇인가?",
+        "공급망 안정성 확보를 위해 어떤 전략과 대체 방안을 마련하고 있는가?",
+        "인텔과의 전략적 파트너십을 통한 go-to-market 전략과 운영 확장 계획은 무엇인가?"
+      ],
+      "total_score": 25,
+      "normalized_score": 83,
+      "company_research": {
+        "company_name": "SambaNova Systems",
+        "summary": "SambaNova Systems는 2017년에 설립된 미국 팔로알토 기반의 AI 인프라 회사로, AI 기반 소프트웨어와 하드웨어를 제공한다. 현재 약 15억 달러의 누적 투자금을 유치했으며, 기업 가치는 약 50억 달러에 달한다.",
+        "product_overview": "주요 제품은 SN40L이라는 AI 추론 칩으로, 대만 TSMC의 5나노 공정으로 제작된 1,040개의 코어를 포함하고 있다. 이 칩은 고성능 AI 추론을 지원한다.",
+        "technology_overview": "TSMC의 5나노 공정을 활용한 1,040코어 AI 추론 칩 SN40L을 개발하여 AI 인프라에 최적화된 하드웨어를 제공한다.",
+        "business_model": "AI 소프트웨어와 하드웨어를 통합하여 제공하며, 투자자 및 파트너십(예: 인텔)과 협력하여 AI 추론 칩 수요 증가에 대응한다.",
+        "traction": "총 14.8억 달러의 투자 유치, 인텔 캐피탈, 구글 벤처스, 블랙록 등 주요 투자자 확보, 최근 3.5억 달러 규모의 신규 펀딩 라운드 완료 및 인텔과의 전략적 파트너십 체결.",
+        "team": "창립자는 Christopher Re, Kunle Olukotun, Rodrigo Liang이며, AI 및 반도체 분야에서 경험이 풍부한 인력으로 구성되어 있다.",
+        "competition": "활성 경쟁사가 246개에 달하며, AI 반도체 및 인프라 시장에서 다수 경쟁자와 경쟁 중이다.",
+        "risks": [
+          "높은 경쟁 강도와 빠른 기술 변화에 따른 시장 점유율 확보의 어려움",
+          "대규모 투자 유치에 따른 자본 조달 리스크",
+          "TSMC 등 파운드리 의존에 따른 공급망 리스크"
+        ],
+        "references": [
+          {
+            "title": "SambaNova Systems - Tracxn",
+            "url": "https://tracxn.com/d/companies/sambanovasystems/__TvzSIBPeKIVjGmWovhh4uYJ9eAl6FPYF0Iwfg8H-YJg",
+            "snippet": "SambaNova Systems is a series E company based in Palo Alto (United States), founded in 2017 by Christopher Re, Kunle Olukotun and Rodrigo Liang. It operates as a Provider of AI -powered software and hardware. SambaNova Systems has raised $1.48B in funding from investors like Intel Capital, Google Ventures and BlackRock, with a current valuation of $5B. The company has 246 active competitors ..."
+          },
+          {
+            "title": "SambaNova Systems raises $350 million, partners with Intel",
+            "url": "https://www.reuters.com/business/media-telecom/ai-chip-startup-sambanova-raises-350-million-vista-led-round-signs-intel-2026-02-24/",
+            "snippet": "SambaNova Systems said on Tuesday it has raised $350 million in a new funding round and struck a partnership with Intel as it seeks to capitalise on surging demand for inference chips used in ..."
+          },
+          {
+            "title": "SambaNova unveils $350M fresh funding, new Q0pre",
+            "url": "https://www.linkedin.com/pulse/sambanova-unveils-350m-fresh-funding-new-q0pre",
+            "snippet": "AI infrastructure company SambaNova is accelerating growth through new funding , a major collaboration, and the launch of a high-performance chip. SambaNova Unveils $350M+ in Fresh Funding , New ..."
+          },
+          {
+            "title": "Report: SambaNova raising $350M Intel-backed consortium",
+            "url": "https://siliconangle.com/2026/02/06/report-sambanova-raising-350m-intel-backed-consortium/",
+            "snippet": "SambaNova's flagship product is an artificial intelligence inference chip called the SN40L. It contains 1,040 cores made using Taiwan Semiconductor Manufacturing Co.'s five-nanometer process."
+          }
+        ]
+      }
+    }
+  ],
+  "hold_companies": []
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "company_name": "Samsong",
+    "thesis": "Samsong은 AI 반도체 분야에서 성장 잠재력이 있으나, 현재 기술, 시장, 사업 모델, 팀, 리스크 및 경쟁력에 대한 정보가 전무하여 투자 판단을 보류하며 추가 실사와 정보 확보가 필수적이다.",
+    "technology_score": 1,
+    "market_score": 1,
+    "business_score": 1,
+    "team_score": 1,
+    "risk_score": 1,
+    "competition_score": 1,
+    "strengths": [
+      "AI 반도체 시장 자체는 성장 잠재력이 크다",
+      "시장 진입 초기 단계로 빠른 성장 가능성 존재",
+      "현재까지 확보된 정보가 전무하여 강점을 식별하기 어려움"
+    ],
+    "risks": [
+      "기술 및 제품에 대한 정보 부족으로 투자 위험이 매우 높음",
+      "시장 진입 타이밍과 경쟁력에 대한 근거 부족",
+      "팀 전문성 및 실행력에 대한 근거 전무"
+    ],
+    "diligence_questions": [
+      "Samsong의 핵심 AI 반도체 기술에 대한 구체적인 설명과 차별점은 무엇인가?",
+      "현재 제품 개발 단계와 구현된 기술의 검증 근거를 제시할 수 있는가?",
+      "Samsong의 구체적인 사업 모델과 수익 창출 방식은 무엇인가?",
+      "현재 확보한 고객, 파트너십, 또는 PoC 진행 현황은 어떠한가?",
+      "창업자 및 핵심 팀원의 경력과 전문성은 무엇인가?",
+      "팀 구성과 조직 운영 현황에 대한 상세 정보를 제공할 수 있는가?",
+      "시장 진입 전략 및 경쟁 우위에 대한 구체적 계획을 확인할 수 있는가?",
+      "Samsong의 기술 및 제품에 대한 상세 정보와 경쟁사 대비 차별화 요소는 무엇인가?"
+    ],
+    "total_score": 6,
+    "normalized_score": 20,
+    "company_research": {
+      "company_name": "Samsong",
+      "summary": "정보 부족",
+      "product_overview": "정보 부족",
+      "technology_overview": "정보 부족",
+      "business_model": "정보 부족",
+      "traction": "정보 부족",
+      "team": "정보 부족",
+      "competition": "정보 부족",
+      "risks": [
+        "정보 부족"
+      ],
+      "references": []
+    }
+  }
+]

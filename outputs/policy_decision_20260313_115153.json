@@ -1,0 +1,56 @@
+{
+  "decision": "hold",
+  "reason": "100점 환산 점수 60점 이상 기업이 없어 전체 보류로 판단했습니다.",
+  "selected_companies": [],
+  "hold_companies": [
+    {
+      "company_name": "NVIDIA",
+      "thesis": "현재 제공된 정보가 전무하여 NVIDIA의 AI 반도체 사업에 대한 투자 판단이 불가능하며, 추가 실사와 구체적 데이터 확보 없이는 투자 보류가 필요하다.",
+      "technology_score": 1,
+      "market_score": 1,
+      "business_score": 1,
+      "team_score": 1,
+      "risk_score": 2,
+      "competition_score": 1,
+      "strengths": [
+        "글로벌 AI 반도체 시장에서 높은 인지도와 브랜드 파워 보유",
+        "기술 리더십과 생태계 구축 가능성 잠재력",
+        "기존 반도체 및 AI 기술 분야에서의 경험과 역량 보유 가능성"
+      ],
+      "risks": [
+        "기술 및 제품 관련 구체적 정보 전무로 기술 완성도 및 차별성 평가 불가",
+        "시장성, 사업 모델, 고객 확보 등 핵심 데이터 부족으로 사업성 판단 어려움",
+        "팀 전문성, 실행력 및 조직 구성에 대한 근거 전무로 리스크 관리 및 실행력 평가 불가"
+      ],
+      "diligence_questions": [
+        "NVIDIA의 AI 반도체 기술 및 제품에 대한 구체적인 설명과 구현 현황은 무엇인가?",
+        "NVIDIA가 보유한 특허, IP 및 기술적 차별성에 대한 상세 자료를 제공할 수 있는가?",
+        "NVIDIA의 AI 반도체 시장 내 구체적 매출 및 성장률은?",
+        "주요 고객 세그먼트와 그들의 구매 의사 결정 요인은 무엇인가?",
+        "NVIDIA의 AI 반도체 관련 구체적인 사업 모델은 무엇인가?",
+        "현재 확보한 고객이나 파트너십, 매출 실적은 있는가?",
+        "창업자 및 핵심 팀원의 경력과 전문성은 무엇인가?",
+        "팀의 기술 개발 및 사업 추진 경험은 어느 정도인가?",
+        "NVIDIA의 AI 반도체 관련 구체적인 기술 및 제품 로드맵은 무엇인가?",
+        "현재 제조 및 공급망 관리 현황과 자금 조달 계획은 어떻게 되는가?",
+        "경쟁사 대비 NVIDIA의 차별화 요소와 방어 전략은 무엇인가?"
+      ],
+      "total_score": 7,
+      "normalized_score": 23,
+      "company_research": {
+        "company_name": "NVIDIA",
+        "summary": "정보 부족",
+        "product_overview": "정보 부족",
+        "technology_overview": "정보 부족",
+        "business_model": "정보 부족",
+        "traction": "정보 부족",
+        "team": "정보 부족",
+        "competition": "정보 부족",
+        "risks": [
+          "정보 부족"
+        ],
+        "references": []
+      }
+    }
+  ]
+}

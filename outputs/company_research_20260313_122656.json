@@ -1,0 +1,44 @@
+{
+  "NVIDIA": {
+    "company_name": "NVIDIA",
+    "summary": "NVIDIA는 AI 반도체 분야에서 데이터 센터 및 개인용 컴퓨팅 제품을 개발하며, AI 생태계 구축을 위한 대규모 투자와 인수합병을 활발히 진행하는 글로벌 선도 기업이다.",
+    "product_overview": "NVIDIA는 맞춤형 데이터 센터 및 PC용 AI 가속 제품을 개발하며, 하이퍼스케일, 엔터프라이즈, 소비자 시장을 대상으로 다양한 AI 애플리케이션과 워크로드를 가속화하는 제품을 제공한다.",
+    "technology_overview": "NVIDIA는 AI 인프라와 개인용 컴퓨팅 제품을 위한 첨단 반도체 기술을 보유하고 있으며, Groq와 같은 AI 칩 스타트업 인수를 통해 기술력을 강화하고 있다.",
+    "business_model": "NVIDIA는 자체 제품 개발과 함께 AI 스타트업에 대한 직접 투자 및 펀딩 라운드 참여를 통해 AI 생태계 구축에 집중하며, 이를 통해 자사 제품 수요를 창출하는 전략을 구사한다.",
+    "traction": "최근 2년간 100개 이상의 AI 스타트업에 투자했으며, 2025년에는 약 400억 달러 규모의 투자 활동을 통해 AI 개발에 적극 참여하고 있다. 또한 20억 달러 규모의 Groq 인수는 회사 역사상 최대 규모의 인수이다.",
+    "team": "정보 부족",
+    "competition": "정보 부족",
+    "risks": [
+      "AI 기술 및 시장 변화에 따른 경쟁 심화 가능성",
+      "대규모 투자에 따른 재무 리스크",
+      "기술 인수 및 통합 실패 가능성"
+    ],
+    "references": [
+      {
+        "title": "NVIDIA and Intel to Develop AI Infrastructure and Personal Computing Products",
+        "url": "https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-and-Intel-to-Develop-AI-Infrastructure-and-Personal-Computing-Products/default.aspx",
+        "snippet": "NVIDIA and Intel Corporation today announced a collaboration to jointly develop multiple generations of custom data center and PC products that accelerate applications and workloads across hyperscale, enterprise and consumer markets."
+      },
+      {
+        "title": "Nvidia Company Profile",
+        "url": "https://tracxn.com/d/companies/nvidia/__Rwvr9cCWEygAYAiBEK0RuL1AbkKNw9sBGPqMEY6zVh4",
+        "snippet": "Explore Nvidia's in-depth company profile, including funding details, key investors, leadership, competitors, and acquisitions."
+      },
+      {
+        "title": "Nvidia buying AI chip startup Groq for about $20 billion, biggest deal",
+        "url": "https://www.cnbc.com/2025/12/24/nvidia-buying-ai-chip-startup-groq-for-about-20-billion-biggest-deal.html",
+        "snippet": "Nvidia is making its largest purchase ever, acquiring assets from 9-year-old chip startup Groq for about $20 billion."
+      },
+      {
+        "title": "Nvidia's 2025 investment activity in AI startups",
+        "url": "https://aifundingtracker.com/nvidia-startup-investments/",
+        "snippet": "Nvidia's 2025 investment activity shows its role in AI development. The company made direct investments and joined funding rounds worth over $40 billion. These investments span from research companies to practical infrastructure providers. The strategy creates an ecosystem that needs Nvidia products."
+      },
+      {
+        "title": "Nvidia's AI empire: a look at its top startup investments",
+        "url": "https://techcrunch.com/2026/01/02/nvidias-ai-empire-a-look-at-its-top-startup-investments/",
+        "snippet": "Over the last two years, Nvidia has used its ballooning fortunes to invest in over 100 AI startups. Here are the giant semiconductor's largest investments."
+      }
+    ]
+  }
+}
