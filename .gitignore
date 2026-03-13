@@ -3,9 +3,20 @@
 .env.local
 .env.dev
 .env.prod
+.venv/
+.uv-cache/
+.pycache/
+__pycache__/
+.DS_Store
+outputs/research_cache/
+outputs/qdrant/
+outputs/qdrant_llm/
+outputs/qdrant_summary_clean/
+outputs/qdrant_summary_clean_local/
+outputs/qdrant_summary_clean_v2/
+outputs/qdrant_translate_pass/
 
 # macOS
-.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -29,10 +40,8 @@ $RECYCLE.BIN/
 out/
 
 # Python
-__pycache__/
 *.py[cod]
 *$py.class
-.venv
 venv/
 env/
 build/
@@ -46,7 +55,6 @@ dist/
 # Java (Maven / Gradle)
 target/
 !.mvn/wrapper/maven-wrapper.jar
-build/
 .gradle/
 bin/
 
