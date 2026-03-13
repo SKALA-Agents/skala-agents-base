@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/chat.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <div class="chat-container">
+            <div class="connection-status" :class="{ connected: isConnected, disconnected: !isConnected }">
+                <i class="fas fa-circle" style="font-size: 8px; margin-right: 4px;"></i>
+                {{ isConnected ? '연결됨' : '연결되지 않음' }}
+            </div>
+            
+            <div class="chat-header">
+                <h1><i class="fas fa-robot"></i> SKALA 학습 도움 Chatbot</h1>
+                <p>Skalala와 대화하세요</p>
+            </div>
+
+            <div class="chat-messages" ref="messagesContainer">
+                <div v-for="message in messages" :key="message.id" class="message" :class="message.type">
+                    <div class="message-avatar">
+                        <i :class="message.type === 'user' ? 'fas fa-user' : 'fas fa-robot'"></i>
+                    </div>
+                    <div class="message-content">
+                        <template v-if="message.type === 'bot' && message.structuredAnswer">
+                            <div class="structured-answer">
+                                <h3 v-if="message.structuredAnswer.title" class="structured-title">{{ message.structuredAnswer.title }}</h3>
+                                <p v-if="message.structuredAnswer.summary" class="structured-summary">{{ message.structuredAnswer.summary }}</p>
+                                <div v-if="message.structuredAnswer.groundingNote" class="grounding-note" :class="{ 'grounding-note-active': message.structuredAnswer.usedRag }">
+                                    {{ message.structuredAnswer.groundingNote }}
+                                </div>
+                                <div v-if="hasItems(message.structuredAnswer.keyPoints)" class="structured-section">
+                                    <div class="structured-label">핵심 포인트</div>
+                                    <ul class="structured-list">
+                                        <li v-for="(point, index) in message.structuredAnswer.keyPoints" :key="`point-${message.id}-${index}`">
+                                            {{ point }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div v-if="hasItems(message.structuredAnswer.followUpQuestions)" class="structured-section">
+                                    <div class="structured-label">추가 질문</div>
+                                    <ul class="structured-list structured-list-soft">
+                                        <li v-for="(question, index) in message.structuredAnswer.followUpQuestions" :key="`followup-${message.id}-${index}`">
+                                            {{ question }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div v-if="hasItems(message.structuredAnswer.sources)" class="structured-section">
+                                    <div class="structured-label">출처</div>
+                                    <div class="source-list">
+                                        <div v-for="(source, index) in message.structuredAnswer.sources" :key="`source-${message.id}-${index}`" class="source-card">
+                                            <div class="source-meta">
+                                                <span class="source-file">{{ formatSourceName(source.source) }}</span>
+                                                <span v-if="source.pageNumber" class="source-badge">p. {{ source.pageNumber }}</span>
+                                            </div>
+                                            <p v-if="source.snippet" class="source-snippet">{{ source.snippet }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            {{ message.content }}
+                        </template>
+                    </div>
+                </div>
+
+                <div v-if="isTyping" class="typing-indicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <span style="margin-left: 10px; font-size: 13px; color: #666;">답변 준비 중...</span>
+                </div>
+
+                <div v-if="error" class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <div class="input-area">
+                    <input
+                        v-model="inputMessage"
+                        @keyup.enter="sendMessage"
+                        type="text"
+                        class="message-input"
+                        placeholder="메시지를 입력하세요..."
+                        :disabled="!isConnected || isTyping"
+                    />
+                </div>
+                <button 
+                    @click="sendMessage" 
+                    class="send-button"
+                    :disabled="!isConnected || isTyping || !inputMessage.trim()"
+                >
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
+</html>

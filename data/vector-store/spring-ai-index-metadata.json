@@ -1,0 +1,12 @@
+{
+  "documentPath" : "classpath:docs/spring_AI_v1.0.pdf",
+  "documentSha256" : "4335270de498256a4cd4e700a3c1aaf2deca5970a8a2ad5f53629e2bcfaa56db",
+  "embeddingModelId" : "sentence-transformers/all-MiniLM-L6-v2",
+  "chunkSize" : 800,
+  "minChunkSizeChars" : 350,
+  "minChunkLengthToEmbed" : 10,
+  "maxNumChunks" : 10000,
+  "keepSeparator" : true,
+  "chunkCount" : 278,
+  "indexedAt" : "2026-03-11T11:52:57.287095Z"
+}
