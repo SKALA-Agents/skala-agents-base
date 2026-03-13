@@ -156,6 +156,51 @@ def _scorecard_table(decisions: List[InvestmentDecision]) -> str:
     return "\n".join(lines)
 
 
+def _executive_overview(decision: InvestmentDecision) -> str:
+    return (
+        f"{decision.company_name}는 {decision.stage} 단계의 AI 반도체 기업으로, "
+        f"최종 DD-Worthiness Score {decision.final_score}점을 기록하며 {decision.recommendation} 의견을 받았다. "
+        f"기술({decision.technical_evaluation.score}/5), 시장성({decision.market_evaluation.score}/5), "
+        f"팀 역량({decision.team_evaluation.score}/5) 측면에서는 상대적으로 우수했지만, "
+        f"실행 및 자금조달 리스크는 추가 검증이 필요한 상태다."
+    )
+
+
+def _technology_assessment(decision: InvestmentDecision) -> str:
+    if decision.technical_evaluation.score >= 4:
+        return (
+            f"{decision.company_name}의 기술 평가는 긍정적이다. 제품 차별성과 아키텍처 경쟁력은 일정 수준 확인되며, "
+            "향후에는 벤치마크, 고객 적용 사례, 양산 준비도 검증이 핵심 확인 포인트다."
+        )
+    return (
+        f"{decision.company_name}의 기술 평가는 보수적으로 접근할 필요가 있다. "
+        "기술 완성도와 제품 차별화를 뒷받침할 추가 검증 자료 확보가 요구된다."
+    )
+
+
+def _market_position(decision: InvestmentDecision) -> str:
+    if decision.market_evaluation.score >= 4:
+        return (
+            f"{decision.company_name}는 AI 반도체 수요 확대 국면에서 시장 진입 가능성을 보유하고 있다. "
+            "다만 실제 고객 전환, 매출 가시성, 파트너십 지속성은 후속 실사에서 점검해야 한다."
+        )
+    return (
+        f"{decision.company_name}는 시장 기회는 존재하지만, 초기 고객 확보와 사업화 속도 측면에서 추가 확인이 필요하다."
+    )
+
+
+def _risk_assessment(decision: InvestmentDecision) -> str:
+    if decision.risk_analysis.score <= 2:
+        return (
+            f"{decision.company_name}는 실행 리스크와 자금조달 리스크를 상대적으로 보수적으로 봐야 한다. "
+            "양산 일정, 공급망 대응, 추가 자금 확보 계획을 구체적으로 검토할 필요가 있다."
+        )
+    return (
+        f"{decision.company_name}의 리스크 수준은 관리 가능한 범위로 보이지만, "
+        "시장 경쟁 심화와 고객 전환 속도는 지속적으로 모니터링해야 한다."
+    )
+
+
 def render_top_report(
     ranking: RankingSelection,
     decisions: List[InvestmentDecision],
@@ -170,8 +215,9 @@ def render_top_report(
         "",
         "## 1. Executive Summary",
         (
-            f"본 보고서는 {market.domain} 도메인 후보 기업을 대상으로 DD-Worthiness Score를 산정하고, "
-            f"`{settings.selective_dd_threshold}점 이상` 기업 중 상위 {len(selected)}개 회사를 투자 추천 후보로 정리한 결과이다."
+            f"본 보고서는 {market.domain} 도메인 후보 기업을 DD-Worthiness Score 기준으로 평가하고, "
+            f"`{settings.selective_dd_threshold}`점 이상을 기록한 기업 중 상위 {len(selected)}개사를 "
+            "투자 추천 후보로 정리한 결과다."
         ),
         "",
         "| Rank | Company | Stage | DD Score | Recommendation |",
@@ -210,16 +256,16 @@ def render_top_report(
                 f"### {decision.company_name}",
                 "",
                 "#### Executive Overview",
-                decision.summary,
+                _executive_overview(decision),
                 "",
                 "#### Technology Assessment",
-                decision.technical_evaluation.summary,
+                _technology_assessment(decision),
                 "",
                 "#### Market Position",
-                decision.market_evaluation.summary,
+                _market_position(decision),
                 "",
                 "#### Risk Assessment",
-                decision.risk_analysis.summary,
+                _risk_assessment(decision),
             ]
         )
 
@@ -233,8 +279,8 @@ def render_top_report(
             _score_table(selected),
             "",
             (
-                f"상위 선정 기업은 모두 `{settings.selective_dd_threshold}점 이상`을 기록했으며, "
-                "정밀 실사 진행 가치가 있는 Selective DD 이상 후보로 판단된다."
+                f"선정된 기업들은 모두 `{settings.selective_dd_threshold}`점 이상을 기록했으며, "
+                "현 단계에서 Selective DD 진행 가치가 있는 후보로 판단된다."
             ),
             "",
             "## 7. Investment Recommendation",
@@ -246,8 +292,9 @@ def render_top_report(
         lines.extend(
             [
                 (
-                    f"현 시점 최우선 검토 대상은 **{best.company_name}**이며, "
-                    f"{best.technical_evaluation.summary} 또한 {best.market_evaluation.summary}"
+                    f"현 시점 최우선 검토 대상은 **{best.company_name}**이다. "
+                    f"{best.stage} 단계에서 {best.final_score}점을 기록했고, 기술 경쟁력과 시장 진입 가능성이 "
+                    "상대적으로 우수한 편이다. 후속 실사에서는 고객 검증, 양산 실행력, 자금 집행 계획을 중점적으로 확인할 필요가 있다."
                 ),
                 "",
                 "### REFERENCE",
@@ -270,8 +317,9 @@ def render_hold_report(
         "",
         "## 1. Executive Summary",
         (
-            f"본 보고서는 {market.domain} 도메인 후보 기업을 대상으로 투자 가능성을 평가한 결과를 정리한 것이다. "
-            f"분석 결과 `{settings.selective_dd_threshold}점 이상` 기준을 충족한 기업이 없어 현재 단계에서는 투자 보류로 판단된다."
+            f"본 보고서는 {market.domain} 도메인 후보 기업의 투자 적합성을 평가한 결과다. "
+            f"이번 분석에서는 `{settings.selective_dd_threshold}`점 이상 기준을 충족한 기업이 없어 "
+            "현 단계 판단은 투자 보류다."
         ),
         "",
         "## 2. Market Overview",
@@ -297,16 +345,16 @@ def render_hold_report(
                 f"### {decision.company_name}",
                 "",
                 "#### Executive Overview",
-                decision.summary,
+                _executive_overview(decision),
                 "",
                 "#### Technology Assessment",
-                decision.technical_evaluation.summary,
+                _technology_assessment(decision),
                 "",
                 "#### Market Position",
-                decision.market_evaluation.summary,
+                _market_position(decision),
                 "",
                 "#### Risk Assessment",
-                decision.risk_analysis.summary,
+                _risk_assessment(decision),
             ]
         )
 
@@ -319,7 +367,7 @@ def render_hold_report(
             "## 6. DD-Worthiness Decision",
             _score_table(ordered),
             "",
-            "현재 기준에서는 DD 진행 대상 기업이 없으며, 전반적으로 추가적인 기술 검증과 고객 traction 확보가 더 필요하다.",
+            "현재 DD 진행 대상에 해당하는 기업은 없으며, 전반적으로 기술 검증과 고객 traction 확인이 추가로 필요하다.",
             "",
             "## 7. Future Monitoring Candidates",
         ]

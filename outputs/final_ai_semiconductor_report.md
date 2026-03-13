@@ -2,7 +2,7 @@
 Startup Investment Evaluation Memo
 
 ## 1. Executive Summary
-본 보고서는 AI Semiconductor 도메인 후보 기업을 대상으로 DD-Worthiness Score를 산정하고, `65점 이상` 기업 중 상위 3개 회사를 투자 추천 후보로 정리한 결과이다.
+This report evaluates candidate companies in the AI Semiconductor domain using the DD-Worthiness Score framework and identifies the top 3 companies above the `65` threshold as investment recommendation candidates.
 
 | Rank | Company | Stage | DD Score | Recommendation |
 |---|---|---|---:|---|
@@ -11,12 +11,14 @@ Startup Investment Evaluation Memo
 | 3 | Groq | Series C+ | 74 | Selective DD |
 
 ## 2. Market Overview
-AI algorithms optimize energy consumption in semiconductor systems and devices. This entails creating power-efficient designs, implementing dynamic power management strategies, and maximizing performance-per-watt metrics for various applications. In January 2024, the first significant chip sector deal of 2024 will be S...
+글로벌 AI 반도체 시장은 2025년 650억 1000만 달러에서 2034년 2328억 5000만 달러로 연평균 15.23% 성장할 것으로 예상됩니다. 2025년 전 세계 반도체 매출은 7930억 달러에 달하며, AI 관련 부품이 전체 매출의 약 3분의 1을 차지합니다. 중국 데이터센터 가속기 시장은 2032년까지 연평균 20.3% 성장할 전망입니다.
 
 ### Market Drivers
-- AI algorithms optimize energy consumption in semiconductor systems and devices. This entails creating power-efficient designs, implementing dynamic power management strategies, and maximizing performance-per-watt metrics for various applications. In January 2024, the first significant chip sector deal of 2024 will be S...
-- In parallel, Gartner reports a 21% increase in global semiconductor revenue for 2025, totaling $793 billion. They report growth is driven by high demand for AI components such as high-bandwidth memory and processing units, which together accounted for nearly one-third of total semiconductor revenue during the year.
-- The concentration of value is most evident in the memory segment. Revenues for memory in 2026 are likely to reach $200 billion, or 25% of the total market, driven by a “memory supercycle” where high-bandwidth memory (HBM) and DDR5 are in chronic shortage. Analysts observe that while memory is notoriously cyclical, the ...
+- AI 최적화 칩에 대한 수요 증가
+- 엣지 컴퓨팅 및 데이터센터, IoT, 소비자 전자제품에서 AI 채택 확대
+- 고성능 컴퓨팅 및 딥러닝을 위한 가속기 칩 수요 증가
+- 중국 내 AI 가속기 칩 개발 및 데이터센터 확장
+- 에너지 효율적인 칩 아키텍처에 대한 요구 증가
 
 ## 3. Candidate Comparison
 | Company | Technology | Market | Team | Risk | Overall Assessment |
@@ -30,44 +32,44 @@ AI algorithms optimize energy consumption in semiconductor systems and devices. 
 ### EnCharge AI
 
 #### Executive Overview
-EnCharge AI는 Skip to footer Parola Analytics # Patent Snapshot: EnCharge AI and its ‘first-of-its-kind’ on-device AI accelerator March 2, 2026 Tsu-Wei Chao Share this: Highlights: EnCharge AI raised over $100 million and launched its first commercial AI accelerator, EN100, advancing analog in-memory computing from research into dep...을 제공하며 현재 Series B 단계에서 DD-Worthiness Score 78점으로 Selective DD 평가를 받았다.
+EnCharge AI는 2022년에 설립되어 미국 캘리포니아 산타클라라에 본사를 둔 반도체 스타트업으로, 고급 AI 칩과 풀스택 솔루션을 개발한다. 프린스턴 대학교에서 약 10년간 연구된 아날로그 인메모리 컴퓨팅 기술을 기반으로 하며, AI 추론을 위한 에너지 효율적이고 저비용의 AI 가속기를 상용화했다.
 
 #### Technology Assessment
-Skip to footer Parola Analytics # Patent Snapshot: EnCharge AI and its ‘first-of-its-kind’ on-device AI accelerator March 2, 2026 Tsu-Wei Chao Share this: Highlights: EnCharge AI raised over $100 million and launched its first commercial AI accelerator, EN100, advancing analog in-memory computing from research into dep...
+EN100 AI 가속기는 아날로그 인메모리 컴퓨팅 기술을 적용해 데이터 이동을 최소화하고 전력 소모를 줄이며, 최대 20배 이상의 에너지 효율을 달성한다. M.2 모듈과 PCIe 카드 형태로 제공되며, 엣지 및 클라이언트 디바이스에서 고성능 AI 추론을 지원한다.
 
 #### Market Position
-The Series B round includes participation from financial and strategic investors across semiconductors, defense, industrial technology, and infrastructure. Participants include Maverick Silicon, Capital TEN, SIP Global Partners, Zero Infinity Partners, CTBC VC, Vanderbilt University, and Morgan Creek Digital, alongside... SANTA CLARA, Calif., Dec. 5, 2023 /PRNewswire/ -- EnCharge AI, the company developing advanced AI chips and full stack solutions, today announced it has closed a second institutional round of funding from strategic partners including VentureTech Alliance, RTX Ventures, and ACVC Partners with participation from existing...
+EnCharge AI는 자체 개발한 아날로그 인메모리 컴퓨팅 아키텍처를 활용한 AI 가속기 EN100을 출시하여, 반도체 공급망을 활용한 하드웨어와 소프트웨어 통합 플랫폼을 제공한다. 주요 고객은 반도체, 방위산업, 산업기술, 인프라 분야이며, 전략적 투자자 및 금융 투자자로부터 1억 달러 이상의 자본을 확보했다.
 
 #### Risk Assessment
-EnCharge AI is a pioneering company founded in 2022 and headquartered in Santa Clara, California. Specializing in advanced artificial intelligence hardware and software for edge computing, EnCharge AI operates within the General Purpose Semiconductors industry. The company was co-founded by Naveen Verma, Kailash Gopala...
+아날로그 인메모리 컴퓨팅 기술의 상용화 및 대규모 시장 채택 여부가 불확실하며, 경쟁사 대비 기술 우위 유지가 도전 과제다. 반도체 산업의 공급망 변동성, 고성능 AI 칩 개발에 따른 비용 부담, 그리고 빠르게 변화하는 AI 하드웨어 시장 환경도 위험 요인으로 작용할 수 있다.
 
 ### Etched
 
 #### Executive Overview
-Etched는 However, given the scale at which AI is now being deployed, some have questioned whether an application-specific approach to transformer models – the fundamental architecture on which large language and diffusion models are derived – could offer greater performance and efficiency than existing accelerators. This is the...을 제공하며 현재 Series A 단계에서 DD-Worthiness Score 78점으로 Selective DD 평가를 받았다.
+Etched는 2022년에 설립된 AI 반도체 스타트업으로, 트랜스포머 모델에 특화된 애플리케이션별 접근법을 통해 대규모 AI 연산에 최적화된 ASIC 칩인 Sohu를 개발 중이다. 본사는 미국 캘리포니아 쿠퍼티노에 위치하며, 약 35명의 직원을 보유하고 있다.
 
 #### Technology Assessment
-However, given the scale at which AI is now being deployed, some have questioned whether an application-specific approach to transformer models – the fundamental architecture on which large language and diffusion models are derived – could offer greater performance and efficiency than existing accelerators. This is the...
+Sohu 칩은 트랜스포머 아키텍처에 특화된 ASIC으로, 기존 GPU 대비 최대 20배의 성능 향상을 목표로 한다. 이 칩은 낮은 정밀도 데이터 타입에 최적화되어 있으며, 전통적인 GEMM 기반 아키텍처 대신 독자적인 하드웨어를 사용해 어텐션 연산을 효율적으로 처리한다.
 
 #### Market Position
-Skip to content jon peddie research graphicspeak display daily babeltechreviews Jon Peddie Research # Welcome to the club, Etched The big VC winners. Jon Peddie In our 2026AI Processors Marketreport, we identified billion-dollar AI processor start-ups and a second tier raising $500 million to $999 million. Etched just ... Different companies start engaging with design partners at different stages of their development, as partners can swing between being research subjects and true early customers who will (eventually) pay for your product. What we’ve observed is that the former is better than the latter. Why is this? It’s because your nu...
+Etched는 개발 단계에 따라 디자인 파트너와 협업 시기를 조절하며, 초기에는 연구 대상 파트너를 확보하고 점차 실제 구매 고객으로 전환시키는 전략을 사용한다. 2024년 시리즈 A에서 약 1억 2천만 달러를 포함해 총 6억 2천만 달러 이상의 자금을 조달했으며, 50억 달러의 기업가치를 인정받았다.
 
 #### Risk Assessment
-Powered by Polymarket # Largest Company end of June? $2,152,242 Volume Ends on Jun 30, 2026 Loading chart... View more on Polymarket Warning! GuruFocus has detected 5 Warning Signs with NVDA. Is NVDA fairly valued? Test your thesis with our free DCF calculator. Following this raise, Etched has secured almost $1 billion...
+트랜스포머 아키텍처가 향후에도 지배적일 것이라는 가정에 기반한 사업 모델로, 아키텍처 변화 시 기술적 위험이 존재한다. 또한, Nvidia 등 대형 경쟁사의 시장 지배력과 생태계 구축으로 인한 진입 장벽, 그리고 특허 및 기술 보호의 어려움도 주요 리스크로 작용한다.
 
 ### Groq
 
 #### Executive Overview
-Groq는 Groq has run several internal benchmarks, reaching 300 tokens per second consistently, setting a new speed standard for AI solutions that has yet to be achieved by legacy solutions and incumbent providers. ArtificialAnalysis.ai benchmarks confirm Groq’s superiority over other providers, especially regarding throughput ...을 제공하며 현재 Series C+ 단계에서 DD-Worthiness Score 74점으로 Selective DD 평가를 받았다.
+Groq는 2016년에 설립된 AI 및 고성능 컴퓨팅을 위한 반도체 설계 회사로, AI 추론에 특화된 Language Processing Unit(LPU) 아키텍처를 개발하여 기존 GPU 대비 낮은 지연 시간과 높은 에너지 효율을 제공한다.
 
 #### Technology Assessment
-Groq has run several internal benchmarks, reaching 300 tokens per second consistently, setting a new speed standard for AI solutions that has yet to be achieved by legacy solutions and incumbent providers. ArtificialAnalysis.ai benchmarks confirm Groq’s superiority over other providers, especially regarding throughput ...
+Groq의 LPU는 병목 현상과 복잡성을 줄이기 위해 컴파일러 중심의 결정론적 실행 방식을 채택하며, 초당 300 토큰 처리 속도를 기록하는 등 AI 추론 성능에서 GPU 대비 2~3배의 속도 향상과 에너지 효율을 달성한다.
 
 #### Market Position
-Groq is poised to capitalize on the burgeoning AI inference chip market, a subsegment of the AI chip industry projected to reach $300 billion by 2030. This image highlights the competitive pressures faced by AI startups. The global AI chip market, valued at $53 billion in 2024, is expected to grow sixfold by 2030. Groq... Disruptive, a Dallas-based growth investment firm, has backed some of the most transformative and successful companies in the last decade, including large investments in Palantir, Airbnb, Spotify, Shield AI, Hims, Databricks, Stripe, Slack and many other AI leaders and AI adjacent businesses. Disruptive has invested ne...
+Groq는 AI 추론 칩 시장에서 자체 IP를 기반으로 하드웨어와 소프트웨어를 결합한 솔루션을 제공하며, 주요 투자사인 Disruptive를 포함한 여러 성장 투자사로부터 약 30억 달러 이상의 자금을 조달하여 제품 개발과 인프라 확장에 집중하고 있다. 2025년 9월 기준 69억 달러의 기업가치 평가를 받으며, Cisco, Samsung, BlackRock, Deutsche Telekom 등 다수의 대형 투자자로부터 자금을 유치했고, 수만 대의 LPU를 배포하여 AI 추론 클라우드 서비스의 성장...
 
 #### Risk Assessment
-Founded by Jonathan Ross, Groq specializes in purpose-built hardware designed specifically for AI workloads, focusing on AI inference chips that deliver high speed, energy efficiency, and low cost. These chips, known as Language Processing Units (LPUs), optimize the execution of pre-trained AI models, providing superio...
+높은 자본 소요와 기술 개발 난이도, NVIDIA 등 대형 경쟁사의 시장 지배력, 그리고 AI 칩 시장 내 치열한 경쟁과 기술 변화 속도에 따른 사업 지속 가능성 위험이 존재한다.
 
 ## 5. Scorecard Evaluation
 | Company | Technology | Market | Team | Competition | Risk | Final Score |
@@ -83,21 +85,18 @@ Founded by Jonathan Ross, Groq specializes in purpose-built hardware designed sp
 | Etched | Series A | 78 | Selective DD |
 | Groq | Series C+ | 74 | Selective DD |
 
-상위 선정 기업은 모두 `65점 이상`을 기록했으며, 정밀 실사 진행 가치가 있는 Selective DD 이상 후보로 판단된다.
+All selected companies scored at or above `65` and are considered worthy of selective due diligence at the current stage.
 
 ## 7. Investment Recommendation
-현 시점 최우선 검토 대상은 **EnCharge AI**이며, Skip to footer Parola Analytics # Patent Snapshot: EnCharge AI and its ‘first-of-its-kind’ on-device AI accelerator March 2, 2026 Tsu-Wei Chao Share this: Highlights: EnCharge AI raised over $100 million and launched its first commercial AI accelerator, EN100, advancing analog in-memory computing from research into dep... 또한 The Series B round includes participation from financial and strategic investors across semiconductors, defense, industrial technology, and infrastructure. Participants include Maverick Silicon, Capital TEN, SIP Global Partners, Zero Infinity Partners, CTBC VC, Vanderbilt University, and Morgan Creek Digital, alongside... SANTA CLARA, Calif., Dec. 5, 2023 /PRNewswire/ -- EnCharge AI, the company developing advanced AI chips and full stack solutions, today announced it has closed a second institutional round of funding from strategic partners including VentureTech Alliance, RTX Ventures, and ACVC Partners with participation from existing...
+**EnCharge AI** is the highest-priority candidate at this stage, with a 78-point score at the Series B stage. The company stands out on technology competitiveness and market entry potential, while follow-up diligence should focus on customer validation, manufacturing execution, and capital deployment plans.
 
 ### REFERENCE
-- Precedence Research(2025). Artificial Intelligence (AI) in Semiconductor Market Size 2025 to 2034. Precedence Research. https://www.precedenceresearch.com/artificial-intelligence-in-semiconductor-market
-- Nationalcioreview(n.d.). Semiconductor Market Revalued as AI Drives Significant Growth. Nationalcioreview. https://nationalcioreview.com/articles-insights/extra-bytes/semiconductor-market-revalued-as-ai-drives-significant-growth/
-- Crispidea(2026). AI in Semiconductor Industry: What Will Drive 2026 Growth - Crispidea. Crispidea. https://www.crispidea.com/ai-in-semiconductor-industry-2026/?srsltid=AfmBOorSgQ3pDiqbRoHp8NsBq99KhGGs4BQjiVsVwr38uAz7xqu2whJH
-- MarketsandMarkets(2032). Data Center Accelerator Market Size and Share Analysis 2032. MarketsandMarkets. https://www.marketsandmarkets.com/ResearchInsight/china-data-center-accelerator-market.asp
-- IEA(n.d.). Energy demand from AI - IEA. IEA. https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai
-- Deloitte(2026). 2026 Global Semiconductor Industry Outlook - Deloitte. Deloitte. https://www.deloitte.com/us/en/insights/industry/technology/technology-media-telecom-outlooks/semiconductor-industry-outlook.html
-- Ybinspire(n.d.). AI, Deep Tech, and the New Startup Investment Landscape - YBinspire. Ybinspire. https://ybinspire.com/ai-deep-tech-and-the-new-startup-investment-landscape/
-- Troylendman(n.d.). AI Chip IPO Metrics: Investment Benchmarks Revealed. Troylendman. https://troylendman.com/ai-chip-ipo-metrics-investment-benchmarks-revealed/
-- Growthequityinterviewguide(n.d.). Deep Tech Venture Capital: Key Strategies & Evaluations. Growthequityinterviewguide. https://growthequityinterviewguide.com/venture-capital/sector-focused-venture-capital/deep-tech-venture-capital
+- Precedence Research(n.d.). . Precedence Research. https://www.precedenceresearch.com/artificial-intelligence-in-semiconductor-market
+- Nationalcioreview(n.d.). . Nationalcioreview. https://nationalcioreview.com/articles-insights/extra-bytes/semiconductor-market-revalued-as-ai-drives-significant-growth/
+- Ybinspire(n.d.). . Ybinspire. https://ybinspire.com/ai-deep-tech-and-the-new-startup-investment-landscape/
+- Troylendman(n.d.). . Troylendman. https://troylendman.com/ai-chip-ipo-metrics-investment-benchmarks-revealed/
+- MarketsandMarkets(n.d.). . MarketsandMarkets. https://www.marketsandmarkets.com/ResearchInsight/china-data-center-accelerator-market.asp
+- Deloitte(n.d.). . Deloitte. https://www.deloitte.com/us/en/insights/industry/technology/technology-media-telecom-outlooks/semiconductor-industry-outlook.html
 - Exa(n.d.). EnCharge AI Executive Team & Leadership | Expertise in AI Systems. Exa. https://exa.ai/websets/directory/encharge-ai-executives
 - EnCharge AI(n.d.). About Us - EnCharge AI. EnCharge AI. https://www.enchargeai.com/about-us
 - TechCrunch(2025-02-13). EnCharge raises $100M+ to accelerate AI using analog chips. TechCrunch. https://techcrunch.com/2025/02/13/encharge-raises-100m-to-accelerate-ai-using-analog-chips/

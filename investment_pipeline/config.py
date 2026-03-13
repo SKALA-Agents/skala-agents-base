@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     )
     tavily_max_results_per_query: int = 3
     research_cache_dir: Path = Path("outputs/research_cache")
+    qdrant_path: Path = Path("outputs/qdrant")
+    dense_embedding_model: str = "BAAI/bge-m3"
+    sparse_embedding_model: str = "Qdrant/bm25"
+    hybrid_search_limit: int = 4
     openai_api_key: str | None = Field(
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "OPEN_AI_API"),

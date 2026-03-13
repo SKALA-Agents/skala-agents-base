@@ -31,7 +31,7 @@ def main(
     result = run_pipeline(domain=domain, companies=companies)
     report_markdown = result.report_markdown
 
-    if polish_korean and settings.enable_llm_enrichment:
+    if settings.enable_llm_enrichment:
         polished = polish_report_to_korean(report_markdown)
         if polished:
             report_markdown = polished

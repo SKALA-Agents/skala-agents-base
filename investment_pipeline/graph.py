@@ -68,10 +68,11 @@ def _company_graph():
 
     def technical_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
+        research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["technology"]
         additional_notes = state.get("technical_additional_research_state", [])
-        summary = company.technology_summary
-        evidence = [company.product_summary, company.moat]
+        summary = research.product_and_technology or company.technology_summary
+        evidence = [research.product_and_technology or company.product_summary, company.moat]
         if additional_notes:
             summary = f"{summary} 추가 확인 사항: {' '.join(additional_notes)}"
             evidence = evidence + additional_notes
@@ -94,9 +95,10 @@ def _company_graph():
 
     def market_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
+        research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["market"] + STAGE_WEIGHTS[company.stage]["traction"]
         additional_notes = state.get("market_additional_research_state", [])
-        summary = f"{company.market_summary} {company.traction_summary}"
+        summary = f"{research.business_model_status} {research.traction_summary}".strip()
         if additional_notes:
             summary = f"{summary} 추가 확인 사항: {' '.join(additional_notes)}"
         return {
@@ -105,7 +107,7 @@ def _company_graph():
                 signal=round((company.market_signal + company.traction_signal) / 2),
                 weight=weight,
                 summary=summary,
-                evidence=[company.customer_focus, company.traction_summary] + additional_notes,
+                evidence=[company.customer_focus, research.traction_summary] + additional_notes,
                 follow_up_questions=build_follow_up(company.market_signal, "시장성"),
             ),
             "market_recheck_completed_state": bool(additional_notes),
@@ -118,20 +120,22 @@ def _company_graph():
 
     def team_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
+        research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["team"]
         return {
             "team_evaluation_state": make_evaluation(
                 category="Team & Founders",
                 signal=company.team_signal,
                 weight=weight,
-                summary=company.team_summary,
-                evidence=company.tags[:2] or [company.team_summary],
+                summary=research.team_summary or company.team_summary,
+                evidence=company.tags[:2] or [research.team_summary or company.team_summary],
                 follow_up_questions=build_follow_up(company.team_signal, "팀 역량"),
             )
         }
 
     def risk_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
+        research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["risk"]
         risk_score = max(1, min(5, 6 - company.risk_signal))
         return {
@@ -139,7 +143,7 @@ def _company_graph():
                 category="Execution & Financing Risk",
                 signal=risk_score,
                 weight=weight,
-                summary=company.risk_summary,
+                summary=research.risk_summary or company.risk_summary,
                 evidence=company.risks,
                 follow_up_questions=build_follow_up(risk_score, "리스크"),
             )
@@ -147,20 +151,22 @@ def _company_graph():
 
     def competition_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
+        research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["competition"]
         return {
             "competition_evaluation_state": make_evaluation(
                 category="Competitive Advantage",
                 signal=company.competition_signal,
                 weight=weight,
-                summary=company.competition_summary,
-                evidence=[company.moat],
+                summary=research.competition_summary or company.competition_summary,
+                evidence=[research.competition_summary or company.moat],
                 follow_up_questions=build_follow_up(company.competition_signal, "경쟁 우위"),
             )
         }
 
     def decision_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
+        research = state["company_research_state"]
         technical = state["technical_evaluation_state"]
         market = state["market_evaluation_state"]
         team = state["team_evaluation_state"]
@@ -176,14 +182,22 @@ def _company_graph():
         recommendation = to_recommendation(final_score)
         strengths = [
             item
-            for item in [company.technology_summary, company.market_summary, company.team_summary]
+            for item in [technical.summary, market.summary, team.summary]
             if item
         ][:3]
-        weaknesses = [company.risk_summary] + company.risks[:2]
+        weaknesses = [risk.summary] + company.risks[:2]
         summary = (
-            f"{company.name}는 {company.product_summary}을 제공하며 현재 {company.stage} 단계에서 "
-            f"DD-Worthiness Score {final_score}점으로 {recommendation} 평가를 받았다."
+            research.company_overview
+            or (
+                f"{company.name}는 {company.stage} 단계에서 DD-Worthiness Score {final_score}점을 기록했으며, "
+                f"{recommendation} 의견을 받았다."
+            )
         )
+        if any(token in summary for token in [" provides ", "receiving a ", " and is currently "]):
+            summary = (
+                f"{company.name}는 {company.stage} 단계에서 DD-Worthiness Score {final_score}점을 기록했으며, "
+                f"{recommendation} 의견을 받은 투자 검토 대상이다."
+            )
         return {
             "investment_decision_state": InvestmentDecision(
                 company_name=company.name,

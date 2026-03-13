@@ -20,10 +20,12 @@ Evaluate the company on one category using a 1-5 score, concise rationale, and f
 REPORT_POLISH_PROMPT = """
 You are editing a startup investment memo written in Markdown.
 
-Rewrite the report in polished Korean for a VC-style investment screening memo.
+Rewrite the report so that only the section titles remain in English and all report content is written in polished Korean for a VC-style investment screening memo.
 
 Rules:
 - Preserve the existing Markdown structure and headings exactly.
+- Keep the table of contents and all Markdown headings in English exactly as written.
+- Rewrite every paragraph, bullet, and narrative sentence under those headings in Korean.
 - Keep company names, stage labels, scores, URLs, and tables unchanged unless grammar requires surrounding text changes.
 - Translate or rewrite body text into concise natural Korean.
 - Remove awkward copied snippets, boilerplate, navigation text, or obvious web-page artifacts.
