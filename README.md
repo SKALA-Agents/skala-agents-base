@@ -1,5 +1,3 @@
-# README.md
-
 # AI Semiconductor Startup Investment Evaluation Agent
 
 > **AI 반도체 스타트업 10개를 자동으로 분석하고, 투자할 가치가 있는 Top3를 골라 보고서를 작성하는Multi-Agent 운영 지원 시스템**
