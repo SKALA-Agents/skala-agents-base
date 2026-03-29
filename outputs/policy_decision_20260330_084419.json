@@ -1,0 +1,296 @@
+{
+  "decision": "top3",
+  "reason": "총점 20점 이상 기업을 최대 3개까지 추천 대상으로 선정했습니다.",
+  "selected_companies": [
+    {
+      "company_name": "Groq",
+      "thesis": "Groq is a leading AI semiconductor company with innovative technology and strong market positioning, supported by substantial funding and investor confidence, poised to capitalize on the growing AI inference market despite competitive and technological risks.",
+      "technology_score": 5,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 4,
+      "strengths": [
+        "Innovative LPU architecture optimized for AI inference speed with proven benchmark leadership.",
+        "Strong market demand for AI inference chips driven by generative AI growth and significant investor backing.",
+        "Successful capital raises totaling over $1.3 billion with backing from prominent investors enhancing credibility."
+      ],
+      "risks": [
+        "Rapid technological advancements by competitors could erode Groq's lead.",
+        "High capital intensity and scaling challenges may pressure cash flow and operational execution.",
+        "Intense competition from large semiconductor companies and emerging startups with disruptive innovations."
+      ],
+      "diligence_questions": [
+        "What is Groq's roadmap for maintaining technological leadership against emerging AI chip architectures?",
+        "Who are Groq's primary customers and what is their adoption rate of Groq's chips?",
+        "What is the detailed background and track record of Groq's founding and executive team?",
+        "What are Groq's plans for scaling manufacturing and global sales channels?",
+        "What are Groq's strategies to mitigate market demand fluctuations?",
+        "Who are Groq's main competitors and how does Groq differentiate its technology?"
+      ],
+      "total_score": 25
+    },
+    {
+      "company_name": "Cerebras",
+      "thesis": "Cerebras is a leading innovator in wafer-scale AI semiconductor technology, positioned to capitalize on the rapidly growing AI infrastructure market with strong financial backing and differentiated performance advantages.",
+      "technology_score": 5,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Development of wafer-scale AI accelerators offering superior performance and energy efficiency compared to traditional GPUs.",
+        "Strong market validation demonstrated by multiple large funding rounds and a high valuation of $23 billion.",
+        "Proven ability to attract significant capital from top-tier investors and leadership driving advanced semiconductor technology development."
+      ],
+      "risks": [
+        "High complexity and manufacturing challenges associated with wafer-scale chip production impacting scalability and margins.",
+        "Market competition from established GPU manufacturers and emerging AI chip startups with significant resources.",
+        "Dependence on adoption by large AI model developers and data centers with entrenched supplier relationships."
+      ],
+      "diligence_questions": [
+        "What are the yield rates and manufacturing costs associated with the WSE-3 wafer-scale chips?",
+        "How does Cerebras plan to maintain technological leadership against emerging AI semiconductor innovations?",
+        "What is the current market share of Cerebras in the AI accelerator segment?",
+        "Who are the primary customers and what is the pipeline for new customer acquisition?",
+        "What is Cerebras's current revenue run rate and profitability outlook?",
+        "What are the company's strategies for scaling manufacturing and managing supply chain risks?",
+        "What is the detailed background and track record of the founding and executive team?",
+        "How does the team plan to sustain innovation and manage scaling challenges?",
+        "How does Cerebras's performance and cost compare to leading GPU and AI chip competitors?",
+        "What is the company's strategy to maintain competitive advantage amid fast innovation cycles?"
+      ],
+      "total_score": 24
+    },
+    {
+      "company_name": "Axelera AI",
+      "thesis": "Axelera AI is positioned to capitalize on the growing edge AI and data center markets with its advanced, efficient, and affordable AI accelerator technology, backed by strong financial support and strategic investors, despite competitive and execution risks.",
+      "technology_score": 5,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Europa AIPU delivers high performance and power efficiency with affordability enhancing market adoption potential.",
+        "Strong financial backing with over $450 million raised, including the largest investment in an EU AI semiconductor company.",
+        "Focus on high-growth edge AI and data center markets supported by prominent investors validating market opportunity."
+      ],
+      "risks": [
+        "Limited public technical details and team background information challenge independent verification and assessment.",
+        "Highly competitive AI semiconductor market with established global players and rapid technological advancements.",
+        "Execution risks related to scaling production, commercialization, and maintaining innovation velocity amid rapid growth."
+      ],
+      "diligence_questions": [
+        "What are the specific technical specifications and benchmarks of the Europa AIPU compared to competitors?",
+        "What is the detailed background and track record of the founding and executive team?",
+        "What is Axelera AI's go-to-market strategy for edge AI and data center segments and key customer validation?"
+      ],
+      "total_score": 24
+    }
+  ],
+  "hold_companies": [
+    {
+      "company_name": "SiMa.ai",
+      "thesis": "SiMa.ai is a technology leader in software-centric embedded edge AI semiconductor solutions, leveraging top MLPerf benchmark performance and strong investor backing to capitalize on the growing physical AI and multimodal generative AI markets despite competitive and execution risks.",
+      "technology_score": 5,
+      "market_score": 4,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Achieved top MLPerf benchmark results for AI/ML edge applications demonstrating superior technology leadership.",
+        "Secured over $355 million in funding reflecting strong investor confidence and market opportunity.",
+        "Unique software-centric MLSoC approach optimized for embedded edge machine learning enabling efficient physical AI solutions."
+      ],
+      "risks": [
+        "High competition from large, well-funded semiconductor companies and rapid technological advancements.",
+        "Execution risks in scaling production and commercial deployment of complex AI SoCs.",
+        "Uncertainty in market adoption speed for physical AI and multimodal generative AI edge chips."
+      ],
+      "diligence_questions": [
+        "What specific architectural innovations differentiate SiMa.ai's MLSoC from competitors?",
+        "What are SiMa.ai's target customer segments and their adoption timelines?",
+        "What is SiMa.ai's go-to-market strategy and current customer traction?",
+        "What is the background and experience of the founding and executive team in AI semiconductor development?",
+        "What are the key technical and market risks identified by the company for their multimodal generative AI chipset?",
+        "Who are SiMa.ai's primary competitors in the multimodal generative AI chipset space?"
+      ],
+      "total_score": 23
+    },
+    {
+      "company_name": "Hailo",
+      "thesis": "Hailo is positioned to capitalize on the growing edge AI semiconductor market with its patented, high-performance AI processors optimized for generative AI tasks, supported by strong funding and a capable team, though it faces significant competitive and technological risks.",
+      "technology_score": 5,
+      "market_score": 4,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Specialized AI processors designed for edge computing, enhancing performance and efficiency.",
+        "Strong intellectual property portfolio with multiple patents protecting their technology architecture.",
+        "Significant funding and successful product launches demonstrate strong business execution and investor confidence."
+      ],
+      "risks": [
+        "Rapid technological advancements in AI semiconductors could outpace current designs.",
+        "Intense competition from established and emerging players in the edge AI accelerator market.",
+        "Dependence on ecosystem support and effective scaling of manufacturing and sales channels."
+      ],
+      "diligence_questions": [
+        "What is the comparative performance and power efficiency of Hailo's processors versus competitors?",
+        "What is Hailo's current market share and customer base in the edge AI segment?",
+        "What is the background and experience of the core engineering and leadership team?",
+        "What is the status and scope of Hailo's patent portfolio and IP protection?",
+        "How does Hailo plan to manage manufacturing and supply chain risks?",
+        "Who are Hailo's main competitors and how does Hailo differentiate technically and commercially?"
+      ],
+      "total_score": 23
+    },
+    {
+      "company_name": "EnCharge AI",
+      "thesis": "EnCharge AI is pioneering analog in-memory computing AI chips with a programmable architecture, targeting efficient AI inference in a competitive semiconductor market backed by strong investor confidence.",
+      "technology_score": 5,
+      "market_score": 4,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Innovative analog in-memory computing technology for AI acceleration with programmable architecture enabling adaptability to evolving AI models.",
+        "Strong investor backing including an oversubscribed $100M Series B led by Tiger Global, indicating market confidence and business momentum.",
+        "Unique focus on analog AI chips differentiating from digital accelerators, with a clear growth phase to accelerate development and commercialization."
+      ],
+      "risks": [
+        "Technical and integration challenges in scaling pioneering analog AI chip technology within existing digital AI infrastructure.",
+        "Market adoption risk due to competition from established semiconductor companies and the dominance of digital AI solutions.",
+        "Uncertainty around revenue generation timeline, manufacturing scale-up, and the team's ability to manage rapid growth effectively."
+      ],
+      "diligence_questions": [
+        "What is the current performance benchmark of EnCharge AI's chips compared to leading digital AI accelerators?",
+        "What is EnCharge AI's go-to-market strategy and current traction with target customers for AI inference chips?",
+        "What are the backgrounds and prior achievements of the founding and executive team members, and how will they manage scaling post-Series B?",
+        "What are the key technical milestones and timelines for product development and commercialization?",
+        "How does the company plan to mitigate risks related to technology adoption and evolving AI model requirements?",
+        "Who are the main competitors in the analog AI chip space, and how does EnCharge AI differentiate itself?"
+      ],
+      "total_score": 23
+    },
+    {
+      "company_name": "SambaNova Systems",
+      "thesis": "SambaNova Systems offers a promising AI semiconductor solution with its innovative SN50 chip and integrated SambaCloud platform, backed by strong investor confidence and strategic partnerships, positioning it to compete in the growing AI hardware market despite significant competitive and scaling risks.",
+      "technology_score": 4,
+      "market_score": 4,
+      "business_score": 3,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Development of SN50 AI chip optimized for scalable, cost-efficient AI inference.",
+        "Integration of hardware with SambaCloud platform and enterprise software for enhanced AI solutions.",
+        "Strong investor backing including SoftBank Vision Fund and Vista Equity Partners, and strategic partnerships such as with Intel."
+      ],
+      "risks": [
+        "Competition from dominant players like Nvidia may limit market penetration despite technology.",
+        "Dependence on continuous capital raises to fund expansion and R&D, with potential challenges in commercializing and scaling products.",
+        "Abandonment of Intel acquisition indicates possible strategic or operational challenges that could impact growth."
+      ],
+      "diligence_questions": [
+        "What are the unique technical advantages of the SN50 chip compared to competitors?",
+        "How mature and scalable is the SambaCloud platform in real enterprise deployments?",
+        "What is SambaNova's current market share and customer base in the AI semiconductor space?",
+        "What is the detailed background and track record of the founding and executive team members?",
+        "What were the reasons behind abandoning the Intel acquisition?",
+        "How does SambaNova plan to differentiate and capture market share against Nvidia and others?"
+      ],
+      "total_score": 21
+    },
+    {
+      "company_name": "Tenstorrent",
+      "thesis": "Tenstorrent leverages pioneering AI semiconductor technology and strategic partnerships to capture growth in the competitive AI chip market, supported by strong leadership and investor confidence.",
+      "technology_score": 4,
+      "market_score": 4,
+      "business_score": 3,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Pioneering AI compute and RISC-V innovation led by renowned architect Jim Keller.",
+        "Strong investor interest and strategic partnerships with Hyundai Motor Group and Samsung Catalyst Fund.",
+        "Positioned in a high-growth AI semiconductor sector with substantial funding and rising valuations."
+      ],
+      "risks": [
+        "Technology adoption risk in a highly competitive and capital-intensive AI chip market.",
+        "Execution risk in scaling complex AI hardware designs and business operations.",
+        "Potential challenges in scaling the broader management team and operational capabilities to meet rapid growth demands."
+      ],
+      "diligence_questions": [
+        "What are the unique technical differentiators of Tenstorrent's AI chips compared to competitors?",
+        "How mature and scalable is their current chip architecture and software stack?",
+        "What is Tenstorrent's go-to-market strategy and current customer pipeline?",
+        "What are the key milestones and timelines for commercial product launches?",
+        "What is the full leadership team's background and experience in semiconductor commercialization?",
+        "How does Tenstorrent mitigate risks related to technology adoption and supply chain?"
+      ],
+      "total_score": 21
+    },
+    {
+      "company_name": "d-Matrix",
+      "thesis": "d-Matrix is positioned to capitalize on the growing AI inference market with its innovative in-memory compute chiplet technology, supported by strong investor backing and a capable team, though it faces execution and competitive risks.",
+      "technology_score": 4,
+      "market_score": 4,
+      "business_score": 3,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Pioneering AI inference compute technology with patented in-memory compute chiplets.",
+        "Targets a large and growing AI inference market with strong investor confidence and a $2 billion valuation.",
+        "Strong financial backing and leadership team supported by prominent investors like Microsoft."
+      ],
+      "risks": [
+        "Technology adoption and scalability challenges in integrating chiplet-based solutions into data centers.",
+        "High competition from established semiconductor companies and rapid technological advancements by competitors.",
+        "Execution risk in scaling operations, unclear current revenue streams, and market penetration."
+      ],
+      "diligence_questions": [
+        "What is the performance advantage and scalability of d-Matrix's in-memory compute chiplets compared to competitors?",
+        "What is the current revenue, customer pipeline, and go-to-market strategy to accelerate adoption?",
+        "What is the background and structure of the founding and executive team to handle rapid growth and commercialization?"
+      ],
+      "total_score": 21
+    },
+    {
+      "company_name": "Etched",
+      "thesis": "Etched is developing a specialized transformer-only ASIC with significant performance per watt improvements targeting the large and growing AI semiconductor market dominated by Nvidia, backed by strong investor confidence but facing execution and competitive risks.",
+      "technology_score": 4,
+      "market_score": 4,
+      "business_score": 3,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 3,
+      "strengths": [
+        "Specialized transformer-only ASIC design optimized for large language models.",
+        "Strong financial backing with $500 million raised and a $5 billion valuation.",
+        "Positioned as a direct competitor to Nvidia with innovative technology and strong investor confidence."
+      ],
+      "risks": [
+        "Performance improvement claims require independent validation and real-world benchmarking.",
+        "High competition from established players like Nvidia with entrenched market positions.",
+        "Execution risks in scaling manufacturing, commercialization, and achieving market adoption."
+      ],
+      "diligence_questions": [
+        "What independent benchmarks or third-party validations exist for the 20x performance per watt claim?",
+        "What is the current stage of chip development and production readiness?",
+        "What is Etched's go-to-market strategy to gain share from Nvidia and other incumbents?",
+        "What are the key team members' backgrounds and prior achievements in AI semiconductor development?",
+        "What is the current revenue and customer pipeline status?",
+        "What are the plans and timelines for scaling production and commercialization?"
+      ],
+      "total_score": 21
+    }
+  ]
+}

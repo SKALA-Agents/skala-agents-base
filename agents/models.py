@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class ServiceConfig(BaseModel):
     domain: str = "AI Semiconductor"
-    md_glob: str = "*.md"
+    md_glob: str = "docs/**/*.md"
     chunk_size: int = 1200
     chunk_overlap: int = 200
     retrieval_k: int = 6
@@ -57,6 +57,28 @@ class AgentEvaluation(BaseModel):
     diligence_questions: list[str]
 
 
+class EvaluationDimension(BaseModel):
+    score: int = Field(ge=1, le=5)
+    rationale: str
+    strengths: list[str]
+    risks: list[str]
+    diligence_questions: list[str]
+
+
+class ProductMarketEvaluation(BaseModel):
+    company_name: str
+    technology: EvaluationDimension
+    market: EvaluationDimension
+    business: EvaluationDimension
+
+
+class TeamRiskCompetitionEvaluation(BaseModel):
+    company_name: str
+    team: EvaluationDimension
+    risk: EvaluationDimension
+    competition: EvaluationDimension
+
+
 class CompanyEvaluation(BaseModel):
     company_name: str
     thesis: str
@@ -89,6 +111,8 @@ class GraphState(BaseModel):
     market_analysis: str = ""
     companies: list[str] = Field(default_factory=list)
     company_contexts: dict[str, str] = Field(default_factory=dict)
+    product_market_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
+    team_risk_competition_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     technology_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     market_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     business_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)

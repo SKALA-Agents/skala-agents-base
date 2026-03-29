@@ -28,8 +28,11 @@ from .models import (
     AgentEvaluation,
     CompanyEvaluation,
     CompanyList,
+    EvaluationDimension,
     GraphState,
+    ProductMarketEvaluation,
     ServiceConfig,
+    TeamRiskCompetitionEvaluation,
 )
 
 HARDCODED_AI_SEMICONDUCTOR_COMPANIES = [
@@ -69,24 +72,29 @@ class InvestmentAnalysisService:
 
         self.source_files = self.discover_markdown_files()
         self.documents = self.load_markdown_documents(self.source_files)
-        self.split_documents = RecursiveCharacterTextSplitter(
-            chunk_size=self.config.chunk_size,
-            chunk_overlap=self.config.chunk_overlap,
-        ).split_documents(self.documents)
         self.embeddings = HuggingFaceEmbeddings(
             model_name=self.config.embedding_model,
             encode_kwargs={"normalize_embeddings": True},
             query_encode_kwargs={"normalize_embeddings": True},
         )
-        self.vectorstore = FAISS.from_documents(self.split_documents, self.embeddings)
-        self.retriever = self.vectorstore.as_retriever(
-            search_kwargs={"k": self.config.retrieval_k}
-        ).with_config(
-            make_run_config(
-                run_name="agents.retriever",
-                tags=parse_tags(self.config.langsmith_tags, "agents", "retriever"),
+        self.split_documents = []
+        self.vectorstore = None
+        self.retriever = None
+        if self.documents:
+            self.split_documents = RecursiveCharacterTextSplitter(
+                chunk_size=self.config.chunk_size,
+                chunk_overlap=self.config.chunk_overlap,
+            ).split_documents(self.documents)
+        if self.split_documents:
+            self.vectorstore = FAISS.from_documents(self.split_documents, self.embeddings)
+            self.retriever = self.vectorstore.as_retriever(
+                search_kwargs={"k": self.config.retrieval_k}
+            ).with_config(
+                make_run_config(
+                    run_name="agents.retriever",
+                    tags=parse_tags(self.config.langsmith_tags, "agents", "retriever"),
+                )
             )
-        )
         self.llm = ChatOpenAI(
             model=self.config.llm_model,
             temperature=self.config.temperature,
@@ -103,10 +111,8 @@ class InvestmentAnalysisService:
         cwd = (cwd or Path.cwd()).resolve()
         candidates = [cwd, cwd.parent]
         for candidate in candidates:
-            if any(
-                path.is_file() and path.name != "README.md"
-                for path in candidate.glob("*.md")
-            ):
+            docs_dir = candidate / "docs"
+            if docs_dir.is_dir() and any(path.is_file() for path in docs_dir.rglob("*.md")):
                 return candidate
         return cwd
 
@@ -114,16 +120,11 @@ class InvestmentAnalysisService:
         return (self.prompt_dir / name).read_text(encoding="utf-8")
 
     def discover_markdown_files(self) -> list[Path]:
-        files = sorted(
+        return sorted(
             path
             for path in self.base_dir.glob(self.config.md_glob)
             if path.is_file() and path.name != "README.md"
         )
-        if not files:
-            raise FileNotFoundError(
-                "No Markdown source files were found in the current directory."
-            )
-        return files
 
     @staticmethod
     def load_markdown_documents(paths: list[Path]) -> list[Document]:
@@ -218,39 +219,15 @@ class InvestmentAnalysisService:
         return cleaned[:10]
 
     def _build_prompts(self) -> None:
-        self.technology_prompt = ChatPromptTemplate.from_messages(
+        self.product_market_prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", self.load_prompt("technology_evaluation_prompt.md")),
+                ("system", self.load_prompt("product_market_evaluation_prompt.md")),
                 ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
             ]
         )
-        self.market_eval_prompt = ChatPromptTemplate.from_messages(
+        self.team_risk_competition_prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", self.load_prompt("market_evaluation_prompt.md")),
-                ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
-            ]
-        )
-        self.business_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", self.load_prompt("business_evaluation_prompt.md")),
-                ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
-            ]
-        )
-        self.team_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", self.load_prompt("team_evaluation_prompt.md")),
-                ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
-            ]
-        )
-        self.risk_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", self.load_prompt("risk_evaluation_prompt.md")),
-                ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
-            ]
-        )
-        self.competition_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", self.load_prompt("competition_evaluation_prompt.md")),
+                ("system", self.load_prompt("team_risk_competition_evaluation_prompt.md")),
                 ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
             ]
         )
@@ -259,7 +236,7 @@ class InvestmentAnalysisService:
                 ("system", self.load_prompt("ranking_prompt.md")),
                 (
                     "human",
-                    "도메인: {domain}\n회사명: {company}\n기술 평가:\n{technology_json}\n시장성 평가:\n{market_json}\n비즈니스 평가:\n{business_json}\n팀 평가:\n{team_json}\n리스크 평가:\n{risk_json}\n경쟁사 비교 평가:\n{competition_json}",
+                    "도메인: {domain}\n회사명: {company}\n제품/시장 통합 평가:\n{product_market_json}\n팀/리스크/경쟁 통합 평가:\n{team_risk_competition_json}",
                 ),
             ]
         )
@@ -285,18 +262,18 @@ class InvestmentAnalysisService:
             [
                 (
                     "system",
-                    "당신은 시장 조사 에이전트입니다. 제공된 문맥만 사용해 시장 규모, 성장성, 수요 신호, 정책 환경, 핵심 리스크를 한국어로 요약하세요.",
+                    "You are a market research agent. Use only the provided context and summarize market size, growth, demand signals, policy context, and key risks in English.",
                 ),
-                ("human", "도메인: {domain}\n문맥:\n{context}"),
+                ("human", "Domain: {domain}\nContext:\n{context}"),
             ]
         )
         self.company_extraction_prompt = ChatPromptTemplate.from_messages(
             [
                 (
                     "system",
-                    "소스 문맥에 등장하는 스타트업 또는 회사명을 추출하세요. JSON으로만 응답하고, companies 키에 문자열 리스트를 넣으세요.",
+                    "Extract startup or company names mentioned in the source context. Respond in JSON only and place a list of strings under the key 'companies'.",
                 ),
-                ("human", "문맥:\n{context}"),
+                ("human", "Context:\n{context}"),
             ]
         )
 
@@ -305,9 +282,11 @@ class InvestmentAnalysisService:
         return state
 
     def analyze_market(self, state: GraphState) -> GraphState:
-        docs = self.retriever.invoke(
-            f"{state.domain} market size growth demand regulation trends"
-        )
+        docs = []
+        if self.retriever is not None:
+            docs = self.retriever.invoke(
+                f"{state.domain} market size growth demand regulation trends"
+            )
         state.market_context = self.format_docs(docs)
         response = self.llm.invoke(
             self.market_prompt.format_messages(
@@ -335,9 +314,11 @@ class InvestmentAnalysisService:
     def collect_company_contexts(self, state: GraphState) -> GraphState:
         company_contexts: dict[str, str] = {}
         for company in state.companies:
-            docs = self.retriever.invoke(
-                f"{company} technology product traction patents market team competition risk"
-            )
+            docs = []
+            if self.retriever is not None:
+                docs = self.retriever.invoke(
+                    f"{company} technology product traction patents market team competition risk"
+                )
             local_context = self.format_docs(docs)
             web_context = self._search_company_web_context(company)
             company_contexts[company] = "\n\n".join(
@@ -346,95 +327,149 @@ class InvestmentAnalysisService:
         state.company_contexts = company_contexts
         return state
 
-    def run_dimension_agent(
-        self, state: GraphState, prompt: ChatPromptTemplate, field_name: str
-    ) -> dict[str, dict[str, Any]]:
-        structured_llm = self.llm.with_structured_output(AgentEvaluation)
-        results: dict[str, dict[str, Any]] = {}
-        dimension_name = field_name.removesuffix("_evaluations")
-        for company in state.companies:
-            context = state.company_contexts[company]
-            result = structured_llm.invoke(
-                prompt.format_messages(
-                    domain=state.domain,
-                    company=company,
-                    context=context,
-                ),
-                config=make_run_config(
-                    run_name=f"agents.{dimension_name}_evaluation",
-                    tags=parse_tags(
-                        self.config.langsmith_tags,
-                        "agents",
-                        "evaluation",
-                        dimension_name,
-                    ),
-                    metadata={"domain": state.domain, "company": company},
-                ),
-            )
-            results[company] = result.model_dump()
-        return results
+    @staticmethod
+    def _dimension_to_agent_eval(company: str, dimension: EvaluationDimension) -> dict[str, Any]:
+        return AgentEvaluation(
+            company_name=company,
+            score=dimension.score,
+            rationale=dimension.rationale,
+            strengths=dimension.strengths,
+            risks=dimension.risks,
+            diligence_questions=dimension.diligence_questions,
+        ).model_dump()
 
-    def _dimension_specs(self) -> list[tuple[str, ChatPromptTemplate]]:
+    def _sync_legacy_dimension_fields(self, state: GraphState) -> None:
+        technology: dict[str, dict[str, Any]] = {}
+        market: dict[str, dict[str, Any]] = {}
+        business: dict[str, dict[str, Any]] = {}
+        team: dict[str, dict[str, Any]] = {}
+        risk: dict[str, dict[str, Any]] = {}
+        competition: dict[str, dict[str, Any]] = {}
+
+        for company, result in state.product_market_evaluations.items():
+            technology[company] = self._dimension_to_agent_eval(
+                company,
+                EvaluationDimension.model_validate(result["technology"]),
+            )
+            market[company] = self._dimension_to_agent_eval(
+                company,
+                EvaluationDimension.model_validate(result["market"]),
+            )
+            business[company] = self._dimension_to_agent_eval(
+                company,
+                EvaluationDimension.model_validate(result["business"]),
+            )
+
+        for company, result in state.team_risk_competition_evaluations.items():
+            team[company] = self._dimension_to_agent_eval(
+                company,
+                EvaluationDimension.model_validate(result["team"]),
+            )
+            risk[company] = self._dimension_to_agent_eval(
+                company,
+                EvaluationDimension.model_validate(result["risk"]),
+            )
+            competition[company] = self._dimension_to_agent_eval(
+                company,
+                EvaluationDimension.model_validate(result["competition"]),
+            )
+
+        state.technology_evaluations = technology
+        state.market_evaluations = market
+        state.business_evaluations = business
+        state.team_evaluations = team
+        state.risk_evaluations = risk
+        state.competition_evaluations = competition
+
+    def run_combined_agent_for_company(
+        self,
+        *,
+        domain: str,
+        company: str,
+        context: str,
+        prompt: ChatPromptTemplate,
+        schema: type[ProductMarketEvaluation] | type[TeamRiskCompetitionEvaluation],
+        run_name: str,
+        tag: str,
+    ) -> dict[str, Any]:
+        structured_llm = self.llm.with_structured_output(schema)
+        result = structured_llm.invoke(
+            prompt.format_messages(
+                domain=domain,
+                company=company,
+                context=context,
+            ),
+            config=make_run_config(
+                run_name=run_name,
+                tags=parse_tags(
+                    self.config.langsmith_tags,
+                    "agents",
+                    "evaluation",
+                    tag,
+                ),
+                metadata={"domain": domain, "company": company},
+            ),
+        )
+        return result.model_dump()
+
+    def _combined_specs(
+        self,
+    ) -> list[tuple[str, ChatPromptTemplate, type[ProductMarketEvaluation] | type[TeamRiskCompetitionEvaluation], str, str]]:
         return [
-            ("technology_evaluations", self.technology_prompt),
-            ("market_evaluations", self.market_eval_prompt),
-            ("business_evaluations", self.business_prompt),
-            ("team_evaluations", self.team_prompt),
-            ("risk_evaluations", self.risk_prompt),
-            ("competition_evaluations", self.competition_prompt),
+            (
+                "product_market_evaluations",
+                self.product_market_prompt,
+                ProductMarketEvaluation,
+                "agents.product_market_evaluation",
+                "product-market",
+            ),
+            (
+                "team_risk_competition_evaluations",
+                self.team_risk_competition_prompt,
+                TeamRiskCompetitionEvaluation,
+                "agents.team_risk_competition_evaluation",
+                "team-risk-competition",
+            ),
         ]
 
-    def evaluate_technology(self, state: GraphState) -> GraphState:
-        state.technology_evaluations = self.run_dimension_agent(
-            state, self.technology_prompt, "technology_evaluations"
+    def evaluate_company(self, state: GraphState, company: str) -> tuple[str, dict[str, Any], dict[str, Any]]:
+        context = state.company_contexts[company]
+        product_market = self.run_combined_agent_for_company(
+            domain=state.domain,
+            company=company,
+            context=context,
+            prompt=self.product_market_prompt,
+            schema=ProductMarketEvaluation,
+            run_name="agents.product_market_evaluation",
+            tag="product-market",
         )
-        return state
-
-    def evaluate_market(self, state: GraphState) -> GraphState:
-        state.market_evaluations = self.run_dimension_agent(
-            state, self.market_eval_prompt, "market_evaluations"
+        team_risk_competition = self.run_combined_agent_for_company(
+            domain=state.domain,
+            company=company,
+            context=context,
+            prompt=self.team_risk_competition_prompt,
+            schema=TeamRiskCompetitionEvaluation,
+            run_name="agents.team_risk_competition_evaluation",
+            tag="team-risk-competition",
         )
-        return state
-
-    def evaluate_business(self, state: GraphState) -> GraphState:
-        state.business_evaluations = self.run_dimension_agent(
-            state, self.business_prompt, "business_evaluations"
-        )
-        return state
-
-    def evaluate_team(self, state: GraphState) -> GraphState:
-        state.team_evaluations = self.run_dimension_agent(
-            state, self.team_prompt, "team_evaluations"
-        )
-        return state
-
-    def evaluate_risk(self, state: GraphState) -> GraphState:
-        state.risk_evaluations = self.run_dimension_agent(
-            state, self.risk_prompt, "risk_evaluations"
-        )
-        return state
-
-    def evaluate_competition(self, state: GraphState) -> GraphState:
-        state.competition_evaluations = self.run_dimension_agent(
-            state, self.competition_prompt, "competition_evaluations"
-        )
-        return state
+        return company, product_market, team_risk_competition
 
     def investment_supervisor(self, state: GraphState) -> GraphState:
-        # 각 차원 평가는 동일한 회사 문맥을 읽기만 하므로 병렬 실행 후 결과만 합칩니다.
-        dimension_specs = self._dimension_specs()
-        with ThreadPoolExecutor(max_workers=len(dimension_specs)) as executor:
-            future_map = {
-                field_name: executor.submit(
-                    self.run_dimension_agent,
-                    state,
-                    prompt,
-                    field_name,
-                )
-                for field_name, prompt in dimension_specs
-            }
-            for field_name in [field for field, _ in dimension_specs]:
-                setattr(state, field_name, future_map[field_name].result())
+        product_market_results: dict[str, dict[str, Any]] = {}
+        team_risk_competition_results: dict[str, dict[str, Any]] = {}
+        max_workers = min(len(state.companies), 4) or 1
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [
+                executor.submit(self.evaluate_company, state, company)
+                for company in state.companies
+            ]
+            for future in futures:
+                company, product_market, team_risk_competition = future.result()
+                product_market_results[company] = product_market
+                team_risk_competition_results[company] = team_risk_competition
+        state.product_market_evaluations = product_market_results
+        state.team_risk_competition_evaluations = team_risk_competition_results
+        self._sync_legacy_dimension_fields(state)
         return state
 
     def rank_companies(self, state: GraphState) -> GraphState:
@@ -445,33 +480,13 @@ class InvestmentAnalysisService:
                 self.ranking_prompt.format_messages(
                     domain=state.domain,
                     company=company,
-                    technology_json=json.dumps(
-                        state.technology_evaluations[company],
+                    product_market_json=json.dumps(
+                        state.product_market_evaluations[company],
                         ensure_ascii=False,
                         indent=2,
                     ),
-                    market_json=json.dumps(
-                        state.market_evaluations[company],
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
-                    business_json=json.dumps(
-                        state.business_evaluations[company],
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
-                    team_json=json.dumps(
-                        state.team_evaluations[company],
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
-                    risk_json=json.dumps(
-                        state.risk_evaluations[company],
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
-                    competition_json=json.dumps(
-                        state.competition_evaluations[company],
+                    team_risk_competition_json=json.dumps(
+                        state.team_risk_competition_evaluations[company],
                         ensure_ascii=False,
                         indent=2,
                     ),

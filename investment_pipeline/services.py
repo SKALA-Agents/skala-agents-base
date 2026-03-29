@@ -157,16 +157,16 @@ def _rewrite_as_korean_note(
     if llm_client.available and cleaned and _needs_korean_rewrite(cleaned):
         subject = f"{company_name} {context_label}".strip()
         prompt = (
-            "당신은 VC 투자심사 애널리스트다.\n"
-            "아래 근거를 1~2문장의 자연스러운 한국어 투자 메모 문장으로 정리하라.\n"
-            "규칙:\n"
-            "- 웹페이지 잡음, 헤더, 네비게이션 문구는 제거한다.\n"
-            "- 회사명, Series, 수치, 핵심 사실은 유지한다.\n"
-            "- 과장 없이 사실 중심으로 쓴다.\n"
-            "- 문장만 반환한다.\n\n"
-            f"주제: {subject or context_label}\n"
-            f"기본 문장: {fallback}\n"
-            f"근거: {cleaned}"
+            "You are a VC investment screening analyst.\n"
+            "Rewrite the evidence below into 1-2 natural Korean memo sentences.\n"
+            "Rules:\n"
+            "- Remove webpage noise, headers, and navigation text.\n"
+            "- Preserve company names, stage labels, numbers, and key facts.\n"
+            "- Stay factual and avoid hype.\n"
+            "- Return sentences only.\n\n"
+            f"Topic: {subject or context_label}\n"
+            f"Fallback sentence: {fallback}\n"
+            f"Evidence: {cleaned}"
         )
         rewritten = llm_client.invoke_text(prompt)
         if rewritten:
@@ -209,11 +209,11 @@ def _normalize_evidence_items(evidence: List[str], *, category: str) -> List[str
             continue
         if llm_client.available and _needs_korean_rewrite(cleaned):
             prompt = (
-                "다음 근거 문장을 한국어 투자심사 메모용 짧은 bullet로 바꿔라.\n"
-                "웹페이지 잡음은 제거하고 핵심 사실만 남긴다.\n"
-                "한 줄만 반환한다.\n\n"
-                f"카테고리: {category}\n"
-                f"근거: {cleaned}"
+                "Rewrite the evidence below into one short Korean investment-screening bullet.\n"
+                "Remove webpage noise and keep only the key facts.\n"
+                "Return one line only.\n\n"
+                f"Category: {category}\n"
+                f"Evidence: {cleaned}"
             )
             rewritten = llm_client.invoke_text(prompt)
             cleaned = rewritten or cleaned
@@ -382,7 +382,7 @@ def build_market_research(domain: str) -> MarketResearch:
             f"{MARKET_PROMPT}\n\n"
             f"Domain: {domain}\n"
             f"Reference context:\n{combined_context}\n"
-            "Return structured Korean output."
+            "Return structured output in English."
         )
         enriched = llm_client.invoke_structured(prompt, MarketResearchLLMOutput)
         if enriched:
@@ -447,7 +447,7 @@ def build_company_research(company: CompanyProfile) -> CompanyResearch:
             f"Moat: {company.moat}\n"
             f"Known risks: {', '.join(company.risks)}\n"
             f"Reference context:\n{combined_context}\n"
-            "Return structured Korean output."
+            "Return structured output in English."
         )
         enriched = llm_client.invoke_structured(prompt, CompanyResearchLLMOutput)
         if enriched:
@@ -546,7 +546,7 @@ def make_evaluation(
             f"Initial summary: {normalized_summary}\n"
             f"Evidence candidates: {', '.join(normalized_evidence)}\n"
             f"Reference context:\n{context}\n"
-            "Return structured Korean output."
+            "Return structured output in English."
         )
         enriched = llm_client.invoke_structured(prompt, EvaluationLLMOutput)
         if enriched:

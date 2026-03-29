@@ -1,7 +1,0 @@
-{
-  "companies": [
-    { "name": "Groq", "stage": "Series C+" },
-    { "name": "Cerebras", "stage": "Series C+" },
-    { "name": "d-Matrix", "stage": "Series B" }
-  ]
-}
