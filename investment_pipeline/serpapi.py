@@ -11,8 +11,8 @@ from .config import settings
 from .models import ResearchEvidence
 
 
-class TavilySearchClient:
-    search_url = "https://api.tavily.com/search"
+class SerpApiSearchClient:
+    search_url = "https://serpapi.com/search.json"
     blocked_domains = {
         "linkedin.com",
         "www.linkedin.com",
@@ -39,43 +39,52 @@ class TavilySearchClient:
 
         cache_dir = settings.research_cache_dir
         cache_dir.mkdir(parents=True, exist_ok=True)
-        cache_key = f"{category}__{query}".replace("/", "_").replace(" ", "_")[:180]
+        cache_key = f"serpapi__{category}__{query}".replace("/", "_").replace(" ", "_")[:180]
         cache_file = cache_dir / f"{cache_key}.json"
         if cache_file.exists():
             data = json.loads(cache_file.read_text(encoding="utf-8"))
             return self._filter([ResearchEvidence.model_validate(item) for item in data])
 
-        payload = {
+        params = {
             "api_key": self.api_key,
-            "query": query,
-            "search_depth": "advanced",
-            "topic": "general",
-            "max_results": settings.tavily_max_results_per_query,
-            "include_answer": False,
-            "include_raw_content": False,
-            "days": days,
+            "engine": "google",
+            "q": query,
+            "num": settings.serpapi_max_results_per_query,
+            "location": settings.serpapi_location,
+            "google_domain": "google.com",
+            "gl": "us",
+            "hl": "en",
         }
-        response = requests.post(self.search_url, json=payload, timeout=20)
+        response = requests.get(self.search_url, params=params, timeout=20)
         if not response.ok:
             detail = response.text.strip()
             raise HTTPError(
-                f"Tavily search failed with status {response.status_code}: {detail}",
+                f"SerpApi search failed with status {response.status_code}: {detail}",
                 response=response,
             )
+
         data = response.json()
+        if data.get("error"):
+            raise HTTPError(f"SerpApi search failed: {data['error']}", response=response)
+
         evidence: List[ResearchEvidence] = []
-        for item in data.get("results", []):
+        for item in data.get("organic_results", []):
+            url = item.get("link") or ""
+            snippet = (item.get("snippet") or item.get("snippet_highlighted_words") or "").strip()
+            if isinstance(snippet, list):
+                snippet = " ".join(snippet)
             evidence.append(
                 ResearchEvidence(
                     title=item.get("title") or query,
-                    url=item.get("url") or "",
-                    source=item.get("url", "").split("/")[2] if item.get("url") else "unknown",
-                    published_date=item.get("published_date"),
-                    content=(item.get("content") or "").strip(),
-                    score=item.get("score"),
+                    url=url,
+                    source=url.split("/")[2] if url else "unknown",
+                    published_date=None,
+                    content=snippet,
+                    score=item.get("position"),
                     category=category,
                 )
             )
+
         cache_file.write_text(
             json.dumps([item.model_dump(mode="json") for item in evidence], ensure_ascii=False, indent=2),
             encoding="utf-8",
@@ -98,4 +107,4 @@ class TavilySearchClient:
         return filtered
 
 
-tavily_client = TavilySearchClient(settings.tavily_api_key)
+serpapi_client = SerpApiSearchClient(settings.serpapi_api_key)

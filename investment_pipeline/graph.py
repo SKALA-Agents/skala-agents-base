@@ -18,6 +18,14 @@ from .services import (
     make_evaluation,
 )
 from .states import CompanyAnalysisState, PipelineState
+from .tracing import apply_langsmith_env, make_run_config, parse_tags
+
+apply_langsmith_env(
+    enabled=settings.langsmith_tracing,
+    api_key=settings.langsmith_api_key,
+    project=settings.langsmith_project,
+    endpoint=settings.langsmith_endpoint,
+)
 
 
 def _company_graph():
@@ -29,29 +37,7 @@ def _company_graph():
             route = "company_research"
         elif "technical_evaluation_state" not in state:
             route = "technical_eval"
-        elif (
-            state["technical_evaluation_state"].score < 4
-            and "technical_additional_research_state" not in state
-            and not state.get("technical_recheck_completed_state", False)
-        ):
-            route = "technical_additional_research"
-        elif (
-            "technical_additional_research_state" in state
-            and not state.get("technical_recheck_completed_state", False)
-        ):
-            route = "technical_eval"
         elif "market_evaluation_state" not in state:
-            route = "market_eval"
-        elif (
-            state["market_evaluation_state"].score < 4
-            and "market_additional_research_state" not in state
-            and not state.get("market_recheck_completed_state", False)
-        ):
-            route = "market_additional_research"
-        elif (
-            "market_additional_research_state" in state
-            and not state.get("market_recheck_completed_state", False)
-        ):
             route = "market_eval"
         elif "team_evaluation_state" not in state:
             route = "team_eval"
@@ -66,57 +52,99 @@ def _company_graph():
         company = state["selected_company_context_state"]
         return {"company_research_state": build_company_research(company)}
 
+    def technical_additional_research_node(state: CompanyAnalysisState) -> List[str]:
+        existing_eval = state.get("technical_evaluation_state")
+        if existing_eval and existing_eval.score >= 4:
+            return []
+        return ["특허, 벤치마크, 프로토타입 검증 자료를 추가 확보한다."]
+
     def technical_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
         research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["technology"]
-        additional_notes = state.get("technical_additional_research_state", [])
-        summary = research.product_and_technology or company.technology_summary
-        evidence = [research.product_and_technology or company.product_summary, company.moat]
-        if additional_notes:
-            summary = f"{summary} 추가 확인 사항: {' '.join(additional_notes)}"
-            evidence = evidence + additional_notes
+        base_summary = research.product_and_technology or company.technology_summary
+        base_evidence = [research.product_and_technology or company.product_summary, company.moat]
+
+        evaluation = make_evaluation(
+            category="Technology & Product",
+            signal=company.technology_signal,
+            weight=weight,
+            summary=base_summary,
+            evidence=base_evidence,
+            follow_up_questions=build_follow_up(company.technology_signal, "기술력"),
+        )
+        additional_notes: List[str] = []
+        rechecked = False
+        if evaluation.score < 4:
+            additional_notes = technical_additional_research_node(
+                {
+                    **state,
+                    "technical_evaluation_state": evaluation,
+                }
+            )
+            if additional_notes:
+                evaluation = make_evaluation(
+                    category="Technology & Product",
+                    signal=company.technology_signal,
+                    weight=weight,
+                    summary=f"{base_summary} 추가 확인 사항: {' '.join(additional_notes)}",
+                    evidence=base_evidence + additional_notes,
+                    follow_up_questions=build_follow_up(company.technology_signal, "기술력"),
+                )
+                rechecked = True
+
         return {
-            "technical_evaluation_state": make_evaluation(
-                category="Technology & Product",
-                signal=company.technology_signal,
-                weight=weight,
-                summary=summary,
-                evidence=evidence,
-                follow_up_questions=build_follow_up(company.technology_signal, "기술력"),
-            ),
-            "technical_recheck_completed_state": bool(additional_notes),
+            "technical_evaluation_state": evaluation,
+            "technical_additional_research_state": additional_notes,
+            "technical_recheck_completed_state": rechecked,
         }
 
-    def technical_additional_research_node(state: CompanyAnalysisState) -> Dict[str, object]:
-        tech = state["technical_evaluation_state"]
-        notes = [] if tech.score >= 4 else ["특허, 벤치마크, 프로토타입 검증 자료를 추가 확보한다."]
-        return {"technical_additional_research_state": notes}
+    def market_additional_research_node(state: CompanyAnalysisState) -> List[str]:
+        existing_eval = state.get("market_evaluation_state")
+        if existing_eval and existing_eval.score >= 4:
+            return []
+        return ["고객 세그먼트, PoC 전환율, 파운드리 파트너 현황을 추가 조사한다."]
 
     def market_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
         research = state["company_research_state"]
         weight = STAGE_WEIGHTS[company.stage]["market"] + STAGE_WEIGHTS[company.stage]["traction"]
-        additional_notes = state.get("market_additional_research_state", [])
-        summary = f"{research.business_model_status} {research.traction_summary}".strip()
-        if additional_notes:
-            summary = f"{summary} 추가 확인 사항: {' '.join(additional_notes)}"
-        return {
-            "market_evaluation_state": make_evaluation(
-                category="Market & Traction",
-                signal=round((company.market_signal + company.traction_signal) / 2),
-                weight=weight,
-                summary=summary,
-                evidence=[company.customer_focus, research.traction_summary] + additional_notes,
-                follow_up_questions=build_follow_up(company.market_signal, "시장성"),
-            ),
-            "market_recheck_completed_state": bool(additional_notes),
-        }
+        base_summary = f"{research.business_model_status} {research.traction_summary}".strip()
+        base_evidence = [company.customer_focus, research.traction_summary]
 
-    def market_additional_research_node(state: CompanyAnalysisState) -> Dict[str, object]:
-        market = state["market_evaluation_state"]
-        notes = [] if market.score >= 4 else ["고객 세그먼트, PoC 전환율, 파운드리 파트너 현황을 추가 조사한다."]
-        return {"market_additional_research_state": notes}
+        evaluation = make_evaluation(
+            category="Market & Traction",
+            signal=round((company.market_signal + company.traction_signal) / 2),
+            weight=weight,
+            summary=base_summary,
+            evidence=base_evidence,
+            follow_up_questions=build_follow_up(company.market_signal, "시장성"),
+        )
+        additional_notes: List[str] = []
+        rechecked = False
+        if evaluation.score < 4:
+            additional_notes = market_additional_research_node(
+                {
+                    **state,
+                    "market_evaluation_state": evaluation,
+                }
+            )
+            if additional_notes:
+                evaluation = make_evaluation(
+                    category="Market & Traction",
+                    signal=round((company.market_signal + company.traction_signal) / 2),
+                    weight=weight,
+                    summary=f"{base_summary} 추가 확인 사항: {' '.join(additional_notes)}",
+                    evidence=base_evidence + additional_notes,
+                    follow_up_questions=build_follow_up(company.market_signal, "시장성"),
+                )
+                rechecked = True
+
+        return {
+            "market_evaluation_state": evaluation,
+            "market_additional_research_state": additional_notes,
+            "market_recheck_completed_state": rechecked,
+        }
 
     def team_eval_node(state: CompanyAnalysisState) -> Dict[str, object]:
         company = state["selected_company_context_state"]
@@ -222,9 +250,7 @@ def _company_graph():
     graph.add_node("investment_supervisor", investment_supervisor_node)
     graph.add_node("company_research", company_research_node)
     graph.add_node("technical_eval", technical_eval_node)
-    graph.add_node("technical_additional_research", technical_additional_research_node)
     graph.add_node("market_eval", market_eval_node)
-    graph.add_node("market_additional_research", market_additional_research_node)
     graph.add_node("team_eval", team_eval_node)
     graph.add_node("risk_eval", risk_eval_node)
     graph.add_node("competition_eval", competition_eval_node)
@@ -237,9 +263,7 @@ def _company_graph():
         {
             "company_research": "company_research",
             "technical_eval": "technical_eval",
-            "technical_additional_research": "technical_additional_research",
             "market_eval": "market_eval",
-            "market_additional_research": "market_additional_research",
             "team_eval": "team_eval",
             "risk_eval": "risk_eval",
             "competition_eval": "competition_eval",
@@ -248,9 +272,7 @@ def _company_graph():
     )
     graph.add_edge("company_research", "investment_supervisor")
     graph.add_edge("technical_eval", "investment_supervisor")
-    graph.add_edge("technical_additional_research", "investment_supervisor")
     graph.add_edge("market_eval", "investment_supervisor")
-    graph.add_edge("market_additional_research", "investment_supervisor")
     graph.add_edge("team_eval", "investment_supervisor")
     graph.add_edge("risk_eval", "investment_supervisor")
     graph.add_edge("competition_eval", "investment_supervisor")
@@ -288,7 +310,16 @@ def build_pipeline():
                 {
                     "selected_company_context_state": enriched_company,
                     "domain_market_research_state": market,
-                }
+                },
+                config=make_run_config(
+                    run_name="investment_pipeline.company_analysis",
+                    tags=parse_tags(
+                        settings.langsmith_tags,
+                        "investment-pipeline",
+                        "company-analysis",
+                    ),
+                    metadata={"company_name": company.name, "stage": company.stage},
+                ),
             )
             decisions.append(result["investment_decision_state"])
         return {"investment_decision_state": decisions}
@@ -359,7 +390,12 @@ def run_pipeline(domain: str, companies: List[CompanyProfile]) -> PipelineResult
         {
             "domain_definition_state": domain,
             "candidate_company_pool_state": companies,
-        }
+        },
+        config=make_run_config(
+            run_name="investment_pipeline.run_pipeline",
+            tags=parse_tags(settings.langsmith_tags, "investment-pipeline", "pipeline"),
+            metadata={"domain": domain, "company_count": len(companies)},
+        ),
     )
     return PipelineResult(
         report_markdown=result["final_report_markdown"],

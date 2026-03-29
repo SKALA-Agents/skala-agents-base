@@ -5,6 +5,7 @@ from typing import Optional, Type, TypeVar
 from pydantic import BaseModel
 
 from .config import settings
+from .tracing import apply_langsmith_env, make_run_config, parse_tags
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -24,6 +25,12 @@ class LLMClient:
             return
         if ChatOpenAI is None or not settings.openai_api_key or not settings.enable_llm_enrichment:
             return
+        apply_langsmith_env(
+            enabled=settings.langsmith_tracing,
+            api_key=settings.langsmith_api_key,
+            project=settings.langsmith_project,
+            endpoint=settings.langsmith_endpoint,
+        )
         try:
             self._model = ChatOpenAI(
                 model=settings.openai_model,
@@ -31,6 +38,15 @@ class LLMClient:
                 api_key=settings.openai_api_key,
                 timeout=20,
                 max_retries=0,
+            ).with_config(
+                make_run_config(
+                    run_name="investment_pipeline.chat_openai",
+                    tags=parse_tags(
+                        settings.langsmith_tags,
+                        "investment-pipeline",
+                        "llm",
+                    ),
+                )
             )
         except Exception:
             self._model = None

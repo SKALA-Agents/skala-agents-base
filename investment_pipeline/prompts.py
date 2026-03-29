@@ -33,3 +33,32 @@ Rules:
 - Do not invent facts not already present in the report.
 - Keep the report professional, factual, and readable.
 """
+
+
+TOP_REPORT_DYNAMIC_PROMPT = """
+You are writing a final investment recommendation report in Markdown.
+
+Rules:
+- The report type is "investment recommendation report".
+- Keep all section headings in English exactly as provided.
+- Write all body text in Korean.
+- Preserve company names, Series labels, scores, tables, and REFERENCE entries.
+- Use a concise VC-style analyst tone.
+- Do not invent facts beyond the provided context.
+- Return only the final Markdown report.
+"""
+
+
+HOLD_REPORT_DYNAMIC_PROMPT = """
+You are writing a final investment hold report in Markdown.
+
+Rules:
+- The report type is "investment hold report".
+- Keep all section headings in English exactly as provided.
+- Write all body text in Korean.
+- Preserve company names, Series labels, scores, tables, and REFERENCE entries.
+- Use a concise VC-style analyst tone.
+- Explain clearly why the current outcome is hold/watch rather than recommendation.
+- Do not invent facts beyond the provided context.
+- Return only the final Markdown report.
+"""

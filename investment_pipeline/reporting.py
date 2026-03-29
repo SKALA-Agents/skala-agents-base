@@ -5,7 +5,9 @@ from typing import List
 from urllib.parse import urlparse
 
 from .config import settings
+from .llm import llm_client
 from .models import InvestmentDecision, MarketResearch, RankingSelection
+from .prompts import HOLD_REPORT_DYNAMIC_PROMPT, TOP_REPORT_DYNAMIC_PROMPT
 
 
 def _score_table(decisions: List[InvestmentDecision]) -> str:
@@ -201,7 +203,57 @@ def _risk_assessment(decision: InvestmentDecision) -> str:
     )
 
 
-def render_top_report(
+def _serialize_report_context(decisions: List[InvestmentDecision], market: MarketResearch) -> str:
+    blocks = [
+        f"Domain: {market.domain}",
+        f"Market Summary: {market.market_size_summary}",
+        "Market Drivers:",
+    ]
+    blocks.extend(f"- {item}" for item in market.growth_drivers)
+    blocks.append("Company Decision Summary:")
+    for decision in decisions:
+        blocks.extend(
+            [
+                f"- Company: {decision.company_name}",
+                f"  Stage: {decision.stage}",
+                f"  Final Score: {decision.final_score}",
+                f"  Recommendation: {decision.recommendation}",
+                f"  Technology Score: {decision.technical_evaluation.score}/5",
+                f"  Market Score: {decision.market_evaluation.score}/5",
+                f"  Team Score: {decision.team_evaluation.score}/5",
+                f"  Competition Score: {decision.competition_evaluation.score}/5",
+                f"  Risk Score: {decision.risk_analysis.score}/5",
+                f"  Summary: {decision.summary}",
+                f"  Technology Notes: {decision.technical_evaluation.summary}",
+                f"  Market Notes: {decision.market_evaluation.summary}",
+                f"  Team Notes: {decision.team_evaluation.summary}",
+                f"  Competition Notes: {decision.competition_evaluation.summary}",
+                f"  Risk Notes: {decision.risk_analysis.summary}",
+            ]
+        )
+    return "\n".join(blocks)
+
+
+def _invoke_dynamic_report(prompt: str, fallback_report: str, context: str) -> str:
+    if not llm_client.available:
+        return fallback_report
+    response = llm_client.invoke_text(
+        f"{prompt}\n\n[Required Markdown Structure]\n{fallback_report}\n\n[Context]\n{context}"
+    )
+    if not response:
+        return fallback_report
+    expected_headings = [
+        "## 1. Executive Summary",
+        "## 2. Market Overview",
+        "## 3. Candidate Comparison",
+        "## 4. Individual Company Analysis",
+    ]
+    if not all(heading in response for heading in expected_headings):
+        return fallback_report
+    return response.strip() + "\n"
+
+
+def _render_top_report_fallback(
     ranking: RankingSelection,
     decisions: List[InvestmentDecision],
     market: MarketResearch,
@@ -305,7 +357,19 @@ def render_top_report(
     return "\n".join(lines) + "\n"
 
 
-def render_hold_report(
+def render_top_report(
+    ranking: RankingSelection,
+    decisions: List[InvestmentDecision],
+    market: MarketResearch,
+) -> str:
+    fallback_report = _render_top_report_fallback(ranking, decisions, market)
+    selected = [d for d in decisions if d.company_name in ranking.top_companies]
+    selected.sort(key=lambda item: item.final_score, reverse=True)
+    context = _serialize_report_context(selected, market)
+    return _invoke_dynamic_report(TOP_REPORT_DYNAMIC_PROMPT, fallback_report, context)
+
+
+def _render_hold_report_fallback(
     ranking: RankingSelection,
     decisions: List[InvestmentDecision],
     market: MarketResearch,
@@ -386,3 +450,14 @@ def render_hold_report(
         ]
     )
     return "\n".join(lines) + "\n"
+
+
+def render_hold_report(
+    ranking: RankingSelection,
+    decisions: List[InvestmentDecision],
+    market: MarketResearch,
+) -> str:
+    fallback_report = _render_hold_report_fallback(ranking, decisions, market)
+    ordered = sorted(decisions, key=lambda item: item.final_score, reverse=True)
+    context = _serialize_report_context(ordered, market)
+    return _invoke_dynamic_report(HOLD_REPORT_DYNAMIC_PROMPT, fallback_report, context)

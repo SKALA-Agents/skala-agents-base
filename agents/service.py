@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 import re
@@ -16,6 +17,13 @@ from langchain_openai import ChatOpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langgraph.graph import END, StateGraph
 
+from investment_pipeline.serpapi import serpapi_client
+from investment_pipeline.tracing import (
+    apply_langsmith_env,
+    make_run_config,
+    parse_tags,
+)
+
 from .models import (
     AgentEvaluation,
     CompanyEvaluation,
@@ -24,6 +32,19 @@ from .models import (
     ServiceConfig,
 )
 
+HARDCODED_AI_SEMICONDUCTOR_COMPANIES = [
+    "Groq",
+    "Cerebras",
+    "SambaNova Systems",
+    "Tenstorrent",
+    "SiMa.ai",
+    "Hailo",
+    "d-Matrix",
+    "Axelera AI",
+    "EnCharge AI",
+    "Etched",
+]
+
 
 class InvestmentAnalysisService:
     def __init__(self, base_dir: Path, config: ServiceConfig | None = None):
@@ -31,6 +52,7 @@ class InvestmentAnalysisService:
         self.config = config or ServiceConfig()
         self.output_dir = self.base_dir / "outputs"
         self.prompt_dir = self.base_dir / "prompts"
+        self._company_web_context_cache: dict[str, str] = {}
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         load_dotenv(self.base_dir / ".env")
@@ -38,6 +60,12 @@ class InvestmentAnalysisService:
             aliased_key = os.getenv("OPEN_AI_API_KEY") or os.getenv("OPEN_AI_API")
             if aliased_key:
                 os.environ["OPENAI_API_KEY"] = aliased_key
+        apply_langsmith_env(
+            enabled=self.config.langsmith_tracing,
+            api_key=self.config.langsmith_api_key,
+            project=self.config.langsmith_project,
+            endpoint=self.config.langsmith_endpoint,
+        )
 
         self.source_files = self.discover_markdown_files()
         self.documents = self.load_markdown_documents(self.source_files)
@@ -53,10 +81,20 @@ class InvestmentAnalysisService:
         self.vectorstore = FAISS.from_documents(self.split_documents, self.embeddings)
         self.retriever = self.vectorstore.as_retriever(
             search_kwargs={"k": self.config.retrieval_k}
+        ).with_config(
+            make_run_config(
+                run_name="agents.retriever",
+                tags=parse_tags(self.config.langsmith_tags, "agents", "retriever"),
+            )
         )
         self.llm = ChatOpenAI(
             model=self.config.llm_model,
             temperature=self.config.temperature,
+        ).with_config(
+            make_run_config(
+                run_name="agents.chat_openai",
+                tags=parse_tags(self.config.langsmith_tags, "agents", "llm"),
+            )
         )
         self._build_prompts()
 
@@ -102,6 +140,56 @@ class InvestmentAnalysisService:
         return "\n\n".join(
             f"Source: {doc.metadata['file_name']}\n{doc.page_content}" for doc in docs
         )
+
+    @staticmethod
+    def _format_web_evidence(company: str, evidence: list[object]) -> str:
+        sections: list[str] = []
+        seen_urls: set[str] = set()
+        for item in evidence:
+            title = getattr(item, "title", "") or company
+            url = getattr(item, "url", "")
+            source = getattr(item, "source", "web")
+            content = re.sub(r"\s+", " ", getattr(item, "content", "") or "").strip()
+            if not url or url in seen_urls or not content:
+                continue
+            seen_urls.add(url)
+            sections.append(
+                "\n".join(
+                    [
+                        f"Web Source: {source}",
+                        f"Title: {title}",
+                        f"URL: {url}",
+                        f"Summary: {content[:500]}",
+                    ]
+                )
+            )
+            if len(sections) >= 6:
+                break
+        return "\n\n".join(sections)
+
+    def _search_company_web_context(self, company: str) -> str:
+        if company in self._company_web_context_cache:
+            return self._company_web_context_cache[company]
+        if not serpapi_client.available:
+            self._company_web_context_cache[company] = ""
+            return ""
+
+        query_map = {
+            "company": [f"{company} AI semiconductor startup overview funding"],
+            "technology": [f"{company} AI accelerator architecture benchmark patent"],
+            "market": [f"{company} customers design partner market traction"],
+            "team": [f"{company} founders executives semiconductor AI startup"],
+            "risk": [f"{company} foundry manufacturing supply chain risk funding"],
+        }
+
+        evidence: list[object] = []
+        for category, queries in query_map.items():
+            for query in queries:
+                evidence.extend(serpapi_client.search(query, category=category, days=1825))
+
+        formatted = self._format_web_evidence(company, evidence)
+        self._company_web_context_cache[company] = formatted
+        return formatted
 
     @staticmethod
     def fallback_company_candidates(text: str) -> list[str]:
@@ -225,21 +313,23 @@ class InvestmentAnalysisService:
             self.market_prompt.format_messages(
                 domain=state.domain,
                 context=state.market_context,
-            )
+            ),
+            config=make_run_config(
+                run_name="agents.market_analysis",
+                tags=parse_tags(
+                    self.config.langsmith_tags,
+                    "agents",
+                    "analysis",
+                    "market",
+                ),
+                metadata={"domain": state.domain},
+            ),
         )
         state.market_analysis = response.content
         return state
 
     def extract_companies(self, state: GraphState) -> GraphState:
-        full_context = self.format_docs(self.documents)
-        structured_llm = self.llm.with_structured_output(CompanyList)
-        result = structured_llm.invoke(
-            self.company_extraction_prompt.format_messages(context=full_context)
-        )
-        companies = result.companies[:10]
-        if not companies:
-            companies = self.fallback_company_candidates(full_context)
-        state.companies = companies[:10]
+        state.companies = HARDCODED_AI_SEMICONDUCTOR_COMPANIES.copy()
         return state
 
     def collect_company_contexts(self, state: GraphState) -> GraphState:
@@ -248,15 +338,20 @@ class InvestmentAnalysisService:
             docs = self.retriever.invoke(
                 f"{company} technology product traction patents market team competition risk"
             )
-            company_contexts[company] = self.format_docs(docs)
+            local_context = self.format_docs(docs)
+            web_context = self._search_company_web_context(company)
+            company_contexts[company] = "\n\n".join(
+                part for part in [local_context, web_context] if part
+            )
         state.company_contexts = company_contexts
         return state
 
     def run_dimension_agent(
         self, state: GraphState, prompt: ChatPromptTemplate, field_name: str
-    ) -> GraphState:
+    ) -> dict[str, dict[str, Any]]:
         structured_llm = self.llm.with_structured_output(AgentEvaluation)
         results: dict[str, dict[str, Any]] = {}
+        dimension_name = field_name.removesuffix("_evaluations")
         for company in state.companies:
             context = state.company_contexts[company]
             result = structured_llm.invoke(
@@ -264,46 +359,82 @@ class InvestmentAnalysisService:
                     domain=state.domain,
                     company=company,
                     context=context,
-                )
+                ),
+                config=make_run_config(
+                    run_name=f"agents.{dimension_name}_evaluation",
+                    tags=parse_tags(
+                        self.config.langsmith_tags,
+                        "agents",
+                        "evaluation",
+                        dimension_name,
+                    ),
+                    metadata={"domain": state.domain, "company": company},
+                ),
             )
             results[company] = result.model_dump()
-        setattr(state, field_name, results)
-        return state
+        return results
+
+    def _dimension_specs(self) -> list[tuple[str, ChatPromptTemplate]]:
+        return [
+            ("technology_evaluations", self.technology_prompt),
+            ("market_evaluations", self.market_eval_prompt),
+            ("business_evaluations", self.business_prompt),
+            ("team_evaluations", self.team_prompt),
+            ("risk_evaluations", self.risk_prompt),
+            ("competition_evaluations", self.competition_prompt),
+        ]
 
     def evaluate_technology(self, state: GraphState) -> GraphState:
-        return self.run_dimension_agent(
+        state.technology_evaluations = self.run_dimension_agent(
             state, self.technology_prompt, "technology_evaluations"
         )
+        return state
 
     def evaluate_market(self, state: GraphState) -> GraphState:
-        return self.run_dimension_agent(
+        state.market_evaluations = self.run_dimension_agent(
             state, self.market_eval_prompt, "market_evaluations"
         )
+        return state
 
     def evaluate_business(self, state: GraphState) -> GraphState:
-        return self.run_dimension_agent(
+        state.business_evaluations = self.run_dimension_agent(
             state, self.business_prompt, "business_evaluations"
         )
+        return state
 
     def evaluate_team(self, state: GraphState) -> GraphState:
-        return self.run_dimension_agent(state, self.team_prompt, "team_evaluations")
+        state.team_evaluations = self.run_dimension_agent(
+            state, self.team_prompt, "team_evaluations"
+        )
+        return state
 
     def evaluate_risk(self, state: GraphState) -> GraphState:
-        return self.run_dimension_agent(state, self.risk_prompt, "risk_evaluations")
+        state.risk_evaluations = self.run_dimension_agent(
+            state, self.risk_prompt, "risk_evaluations"
+        )
+        return state
 
     def evaluate_competition(self, state: GraphState) -> GraphState:
-        return self.run_dimension_agent(
+        state.competition_evaluations = self.run_dimension_agent(
             state, self.competition_prompt, "competition_evaluations"
         )
+        return state
 
     def investment_supervisor(self, state: GraphState) -> GraphState:
-        # Supervisor가 하위 평가 Agent들을 순차 호출하고 결과를 다시 state에 집계합니다.
-        state = self.evaluate_technology(state)
-        state = self.evaluate_market(state)
-        state = self.evaluate_business(state)
-        state = self.evaluate_team(state)
-        state = self.evaluate_risk(state)
-        state = self.evaluate_competition(state)
+        # 각 차원 평가는 동일한 회사 문맥을 읽기만 하므로 병렬 실행 후 결과만 합칩니다.
+        dimension_specs = self._dimension_specs()
+        with ThreadPoolExecutor(max_workers=len(dimension_specs)) as executor:
+            future_map = {
+                field_name: executor.submit(
+                    self.run_dimension_agent,
+                    state,
+                    prompt,
+                    field_name,
+                )
+                for field_name, prompt in dimension_specs
+            }
+            for field_name in [field for field, _ in dimension_specs]:
+                setattr(state, field_name, future_map[field_name].result())
         return state
 
     def rank_companies(self, state: GraphState) -> GraphState:
@@ -344,7 +475,16 @@ class InvestmentAnalysisService:
                         ensure_ascii=False,
                         indent=2,
                     ),
-                )
+                ),
+                config=make_run_config(
+                    run_name="agents.rank_company",
+                    tags=parse_tags(
+                        self.config.langsmith_tags,
+                        "agents",
+                        "ranking",
+                    ),
+                    metadata={"domain": state.domain, "company": company},
+                ),
             )
             item = result.model_dump()
             item["total_score"] = result.total_score
@@ -439,7 +579,17 @@ class InvestmentAnalysisService:
                     state.selected_companies, ensure_ascii=False, indent=2
                 ),
                 hold_json=json.dumps(state.hold_companies, ensure_ascii=False, indent=2),
-            )
+            ),
+            config=make_run_config(
+                run_name="agents.generate_investment_report",
+                tags=parse_tags(
+                    self.config.langsmith_tags,
+                    "agents",
+                    "report",
+                    "top3",
+                ),
+                metadata={"selected_company_count": len(state.selected_companies)},
+            ),
         )
         output_path = self.output_dir / f"investment_report_{timestamp}.md"
         output_path.write_text(report.content, encoding="utf-8")
@@ -456,7 +606,17 @@ class InvestmentAnalysisService:
                 market_analysis=state.market_analysis,
                 policy_reason=state.policy_reason,
                 hold_json=json.dumps(state.hold_companies, ensure_ascii=False, indent=2),
-            )
+            ),
+            config=make_run_config(
+                run_name="agents.generate_hold_report",
+                tags=parse_tags(
+                    self.config.langsmith_tags,
+                    "agents",
+                    "report",
+                    "hold",
+                ),
+                metadata={"hold_company_count": len(state.hold_companies)},
+            ),
         )
         output_path = self.output_dir / f"hold_report_{timestamp}.md"
         output_path.write_text(report.content, encoding="utf-8")
@@ -498,7 +658,14 @@ class InvestmentAnalysisService:
     def run(self, domain: str | None = None) -> GraphState:
         graph = self.build_graph()
         initial_state = GraphState(domain=domain or self.config.domain)
-        result = graph.invoke(initial_state)
+        result = graph.invoke(
+            initial_state,
+            config=make_run_config(
+                run_name="agents.investment_analysis",
+                tags=parse_tags(self.config.langsmith_tags, "agents", "graph"),
+                metadata={"domain": initial_state.domain},
+            ),
+        )
         if isinstance(result, GraphState):
             return result
         return GraphState.model_validate(result)

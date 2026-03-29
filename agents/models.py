@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -16,6 +17,31 @@ class ServiceConfig(BaseModel):
     temperature: float = 0.1
     top_k_companies: int = 3
     recommendation_threshold: int = 20
+    langsmith_tracing: bool = Field(
+        default_factory=lambda: (
+            os.getenv("LANGCHAIN_TRACING_V2", "").strip().lower()
+            in {"1", "true", "yes", "on"}
+        )
+    )
+    langsmith_api_key: str | None = Field(
+        default_factory=lambda: os.getenv("LANGCHAIN_API_KEY")
+        or os.getenv("LANGSMITH_API_KEY")
+    )
+    langsmith_project: str = Field(
+        default_factory=lambda: os.getenv("LANGCHAIN_PROJECT")
+        or os.getenv("LANGSMITH_PROJECT")
+        or "langchain_project_develop"
+    )
+    langsmith_endpoint: str = Field(
+        default_factory=lambda: os.getenv("LANGCHAIN_ENDPOINT")
+        or os.getenv("LANGSMITH_ENDPOINT")
+        or "https://api.smith.langchain.com"
+    )
+    langsmith_tags: str = Field(
+        default_factory=lambda: os.getenv("LANGCHAIN_TAGS")
+        or os.getenv("LANGSMITH_TAGS")
+        or "agents"
+    )
 
 
 class CompanyList(BaseModel):

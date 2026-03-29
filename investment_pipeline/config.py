@@ -30,11 +30,41 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("TAVILY_API_KEY", "TAVILY_APIKEY"),
     )
     tavily_max_results_per_query: int = 3
+    serpapi_api_key: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("SERPAPI_API_KEY", "SERP_API_KEY"),
+    )
+    serpapi_max_results_per_query: int = 5
+    serpapi_location: str = "Seoul,South Korea"
     research_cache_dir: Path = Path("outputs/research_cache")
     qdrant_path: Path = Path("outputs/qdrant")
     dense_embedding_model: str = "BAAI/bge-m3"
     sparse_embedding_model: str = "Qdrant/bm25"
     hybrid_search_limit: int = 4
+    langsmith_tracing: bool = Field(
+        default=False,
+        validation_alias=AliasChoices(
+            "LANGCHAIN_TRACING_V2",
+            "LANGSMITH_TRACING",
+            "LANGCHAIN_TRACING",
+        ),
+    )
+    langsmith_api_key: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("LANGCHAIN_API_KEY", "LANGSMITH_API_KEY"),
+    )
+    langsmith_project: str = Field(
+        default="langchain_project_develop",
+        validation_alias=AliasChoices("LANGCHAIN_PROJECT", "LANGSMITH_PROJECT"),
+    )
+    langsmith_endpoint: str = Field(
+        default="https://api.smith.langchain.com",
+        validation_alias=AliasChoices("LANGCHAIN_ENDPOINT", "LANGSMITH_ENDPOINT"),
+    )
+    langsmith_tags: str = Field(
+        default="investment-pipeline",
+        validation_alias=AliasChoices("LANGCHAIN_TAGS", "LANGSMITH_TAGS"),
+    )
     openai_api_key: str | None = Field(
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "OPEN_AI_API"),
