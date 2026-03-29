@@ -25,8 +25,8 @@ from .retrieval import (
     build_evidence_knowledge_base,
     format_docs,
 )
+from .serpapi import serpapi_client
 from .scoring import weighted_score
-from .tavily import tavily_client
 
 
 _knowledge_base = None
@@ -332,7 +332,7 @@ def _search_company(company: CompanyProfile) -> CompanyWebResearch:
     for category, category_queries in query_map.items():
         for query in category_queries:
             queries.append(query)
-            evidence.extend(tavily_client.search(query, category=category, days=1825))
+            evidence.extend(serpapi_client.search(query, category=category, days=1825))
 
     researched = CompanyWebResearch(
         company_name=company.name,
@@ -357,7 +357,7 @@ def _search_market(domain: str) -> MarketWebResearch:
     evidence: List[ResearchEvidence] = []
     for query in queries:
         category = "Industry" if "framework" not in query else "Framework"
-        evidence.extend(tavily_client.search(query, category=category, days=3650))
+        evidence.extend(serpapi_client.search(query, category=category, days=3650))
 
     researched = MarketWebResearch(domain=domain, search_queries=queries, evidence=evidence)
     _market_research_cache[domain] = researched

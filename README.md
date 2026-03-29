@@ -229,7 +229,7 @@
     ├── qdrant                                   # Qdrant 기반 로컬 벡터 DB 저장소
     │   └── collection                           # 컬렉션 단위 인덱스 저장 디렉토리
     │       └── smoke_hybrid_demo                # 하이브리드 검색 컬렉션 데이터
-    └── research_cache                           # Tavily 웹 리서치 캐시 문서 저장소
+    └── research_cache                           # SerpApi 웹 리서치 캐시 문서 저장소
 
 ```
 

@@ -25,11 +25,6 @@ class Settings(BaseSettings):
     high_priority_threshold: int = 80
     enable_llm_enrichment: bool = False
     enable_live_research: bool = True
-    tavily_api_key: str | None = Field(
-        default=None,
-        validation_alias=AliasChoices("TAVILY_API_KEY", "TAVILY_APIKEY"),
-    )
-    tavily_max_results_per_query: int = 3
     serpapi_api_key: str | None = Field(
         default=None,
         validation_alias=AliasChoices("SERPAPI_API_KEY", "SERP_API_KEY"),

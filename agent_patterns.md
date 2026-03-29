@@ -74,13 +74,13 @@
 적용 위치:
 - [investment_pipeline/retrieval.py](/Users/angj/AngJ/SKALA_Project/new_mcp_project/investment_pipeline/retrieval.py)
 - [investment_pipeline/services.py](/Users/angj/AngJ/SKALA_Project/new_mcp_project/investment_pipeline/services.py)
-- [investment_pipeline/tavily.py](/Users/angj/AngJ/SKALA_Project/new_mcp_project/investment_pipeline/tavily.py)
+- [investment_pipeline/serpapi.py](/Users/angj/AngJ/SKALA_Project/langchain_project_develop/investment_pipeline/serpapi.py)
 
 구성 요소:
 - `QdrantHybridKnowledgeBase`
 - `DesignDocumentKnowledgeBase`
 - `build_evidence_knowledge_base`
-- Tavily 웹 검색
+- SerpApi 웹 검색
 
 역할:
 - 설계 문서를 chunk 단위로 분할하고 Qdrant에 적재한다.
