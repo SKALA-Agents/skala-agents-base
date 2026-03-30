@@ -1,0 +1,296 @@
+{
+  "decision": "top3",
+  "reason": "총점 65점 이상 기업을 최대 3개까지 추천 대상으로 선정했습니다.",
+  "selected_companies": [
+    {
+      "company_name": "Alphabet",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "Alphabet is a leading AI semiconductor innovator with a strong patent portfolio, integrated AI ecosystem, and robust capital resources, positioning it well to capture significant market share despite intense competition and regulatory risks.",
+      "technology_score": 5,
+      "market_score": 5,
+      "business_score": 5,
+      "team_score": 5,
+      "risk_score": 3,
+      "competition_score": 4,
+      "raw_total_score": 27,
+      "weighted_total_score": 91,
+      "strengths": [
+        "Extensive AI chip patent portfolio with over 1,800 AI-related patents providing competitive protection.",
+        "Development of powerful AI chips (TPUs) integrated with large language models and AI software ecosystem enhancing product differentiation.",
+        "Strong leadership and experienced team with proven execution capability in AI semiconductor and infrastructure development."
+      ],
+      "risks": [
+        "Highly competitive AI semiconductor market dominated by players like Nvidia requiring continuous innovation to maintain leadership.",
+        "Significant capital expenditure requirements with uncertain ROI timelines for AI infrastructure investments.",
+        "Potential regulatory scrutiny due to market dominance and extensive patent holdings that could impact business operations."
+      ],
+      "diligence_questions": [
+        "How does Alphabet plan to sustain innovation and differentiate its AI chips against competitors like Nvidia?",
+        "What is the roadmap for integrating hardware and software AI technologies to maximize synergy and market impact?",
+        "What are the financial projections and expected ROI for Alphabet's AI infrastructure investments?",
+        "How does Alphabet manage collaboration and coordination between its AI hardware and software teams to accelerate innovation?",
+        "What strategies does Alphabet have in place to mitigate regulatory risks related to its patent portfolio and market position?"
+      ],
+      "total_score": 91
+    },
+    {
+      "company_name": "NVIDIA",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "NVIDIA is a leading AI semiconductor company with a dominant market share, proprietary technology ecosystem, and strong business model, positioning it well to capitalize on the rapidly growing AI chip market.",
+      "technology_score": 5,
+      "market_score": 5,
+      "business_score": 5,
+      "team_score": 5,
+      "risk_score": 3,
+      "competition_score": 4,
+      "raw_total_score": 27,
+      "weighted_total_score": 91,
+      "strengths": [
+        "Dominant ~80% market share in AI accelerator chips with a proprietary CUDA software platform.",
+        "Strong R&D and innovation capabilities supported by experienced leadership and extensive AI startup investments.",
+        "Robust ecosystem integrating hardware, software, and strategic startup partnerships creating high customer retention and market influence."
+      ],
+      "risks": [
+        "Intense competition from AMD and other semiconductor companies developing comparable AI chips.",
+        "Potential patent disputes and technology obsolescence risks amid rapid AI hardware advancements.",
+        "Dependence on continued AI market growth and potential overreliance on ecosystem lock-in for revenue stability."
+      ],
+      "diligence_questions": [
+        "How does NVIDIA plan to maintain technological leadership and differentiate its products against emerging competitors like AMD?",
+        "What is the status and potential impact of ongoing patent disputes, and what strategies are in place to mitigate litigation risks?",
+        "How sensitive is NVIDIA's revenue to fluctuations in AI market growth projections, and what are contingency plans if adoption slows?",
+        "How does NVIDIA measure ROI on its AI startup investments and integrate startup insights into product development?",
+        "What is the composition and background of the core leadership team, and how is the company managing scaling challenges in supporting a large startup ecosystem?"
+      ],
+      "total_score": 91
+    },
+    {
+      "company_name": "Amazon",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "Amazon leverages its patented AI accelerator technology integrated with AWS cloud infrastructure to compete in the growing AI semiconductor market, supported by strong leadership and strategic investments, positioning it well for scalable growth despite intense competition and regulatory risks.",
+      "technology_score": 4,
+      "market_score": 5,
+      "business_score": 5,
+      "team_score": 5,
+      "risk_score": 3,
+      "competition_score": 3,
+      "raw_total_score": 25,
+      "weighted_total_score": 85,
+      "strengths": [
+        "Patented AI accelerator architectures integrated with AWS cloud services enhancing performance and utility.",
+        "Access to a massive enterprise customer base through AWS and strong ecosystem support via AI startup funding and robotics acquisitions.",
+        "Strong leadership and extensive AI R&D capabilities combined with strategic investments and acquisitions in AI startups enhancing expertise."
+      ],
+      "risks": [
+        "Execution risk in developing AI chips competitive with established players like Nvidia and AMD amid rapid technological advancements.",
+        "Potential regulatory scrutiny due to Amazon's market dominance and acquisitions in AI semiconductor and cloud sectors.",
+        "Highly competitive AI semiconductor market with dominant incumbents limiting market share growth and requiring continuous innovation."
+      ],
+      "diligence_questions": [
+        "What are the performance benchmarks of Amazon's AI chips compared to Nvidia and AMD?",
+        "How scalable and flexible is the patented AI accelerator architecture for diverse AI workloads?",
+        "What is the current market share of Amazon's AI chips within AWS and externally, and plans for expansion beyond AWS?",
+        "What are the revenue and profitability metrics specifically attributable to AI semiconductor products?",
+        "How does Amazon mitigate regulatory risks related to its AI semiconductor and cloud dominance?"
+      ],
+      "total_score": 85
+    }
+  ],
+  "hold_companies": [
+    {
+      "company_name": "OpenAI",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "OpenAI is a leading AI company with strong software capabilities and emerging proprietary AI hardware technology, positioned to capitalize on the growing AI semiconductor market through strategic partnerships and significant funding, but faces execution risks transitioning into hardware.",
+      "technology_score": 4,
+      "market_score": 5,
+      "business_score": 5,
+      "team_score": 5,
+      "risk_score": 2,
+      "competition_score": 4,
+      "raw_total_score": 25,
+      "weighted_total_score": 85,
+      "strengths": [
+        "Leading AI research and model development with strong brand recognition",
+        "Proprietary AI hardware technology under development supported by significant funding",
+        "Strong leadership team with major investors and strategic partnerships including Amazon, Nvidia, and SoftBank"
+      ],
+      "risks": [
+        "Execution risk in transitioning from AI software to semiconductor hardware development",
+        "High valuation creating pressure for rapid growth and performance",
+        "Strong competition from established semiconductor and AI companies with mature hardware expertise"
+      ],
+      "diligence_questions": [
+        "What is the current development stage and timeline for OpenAI's AI accelerator hardware?",
+        "How does OpenAI's hardware performance compare to existing AI accelerators in the market?",
+        "What are the projected revenue contributions from hardware versus AI services over the next 3-5 years?",
+        "What is the team's experience and structure for balancing AI software and hardware innovation?",
+        "What contingency plans exist if hardware development timelines slip and how sustainable is the funding model?"
+      ],
+      "total_score": 85
+    },
+    {
+      "company_name": "Oracle",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "Oracle is well-positioned to capitalize on the growing demand for scalable AI infrastructure through its proprietary technology, strong enterprise customer base, and substantial capital resources, making it a compelling investment opportunity despite execution and competitive risks.",
+      "technology_score": 4,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 5,
+      "risk_score": 3,
+      "competition_score": 4,
+      "raw_total_score": 25,
+      "weighted_total_score": 83,
+      "strengths": [
+        "Proprietary Acceleron Multiplanar Network Architecture tailored for AI workloads",
+        "Established enterprise and hyperscaler customer base providing strong market access",
+        "Experienced leadership with proven ability to execute large-scale infrastructure projects supported by significant capital resources"
+      ],
+      "risks": [
+        "High capital expenditure and financial risk associated with the $45-50 billion AI infrastructure buildout",
+        "Execution risks in scaling and effectively monetizing complex AI infrastructure",
+        "Intense competition from major hyperscalers and cloud providers with similar AI infrastructure ambitions"
+      ],
+      "diligence_questions": [
+        "What are the unique technical advantages of the Acceleron Multiplanar Network compared to competitors?",
+        "How does Oracle plan to maintain technology leadership amid fast-evolving AI hardware trends?",
+        "What is Oracle's plan to ensure return on the $50 billion AI infrastructure investment?",
+        "How will Oracle manage execution risks associated with rapid AI infrastructure expansion?",
+        "How does Oracle differentiate its AI infrastructure offerings in a competitive cloud market?"
+      ],
+      "total_score": 83
+    },
+    {
+      "company_name": "Meta Platforms",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "Meta Platforms leverages its strong AI semiconductor development capabilities, vast data resources, and strategic investments to build a competitive moat in the rapidly growing AI infrastructure market, warranting high priority due diligence.",
+      "technology_score": 4,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 4,
+      "risk_score": 3,
+      "competition_score": 4,
+      "raw_total_score": 24,
+      "weighted_total_score": 80,
+      "strengths": [
+        "Strong in-house AI chip development and procurement capabilities supported by large-scale AI data centers",
+        "Access to massive internal demand and user data fueling AI innovation and infrastructure growth",
+        "Robust AI leadership team and strategic investments in AI startups enhancing technological expertise and market position"
+      ],
+      "risks": [
+        "Heavy dependence on third-party chip suppliers such as Nvidia and AMD, posing supply chain risks",
+        "High capital expenditure requirements that may impact profitability and cash flow",
+        "Regulatory and privacy concerns related to AI deployment and user data usage"
+      ],
+      "diligence_questions": [
+        "What is Meta's roadmap for reducing dependence on external chip suppliers and mitigating supply chain risks?",
+        "How does Meta plan to balance capital expenditure with profitability in its AI infrastructure investments?",
+        "What strategies are in place to address evolving regulatory and privacy challenges in AI?",
+        "How does Meta retain and motivate top AI talent amid intense competition?",
+        "What differentiates Meta's AI semiconductor technology from competitors and how will it maintain technological leadership?"
+      ],
+      "total_score": 80
+    },
+    {
+      "company_name": "Google",
+      "stage": "Series C+",
+      "recommendation": "High Priority DD",
+      "thesis": "Google is well-positioned to leverage its proprietary AI chip technology, strong R&D team, and strategic investments to capture significant market share in the growing AI semiconductor and cloud infrastructure market, despite intense competition and technical integration challenges.",
+      "technology_score": 4,
+      "market_score": 5,
+      "business_score": 4,
+      "team_score": 5,
+      "risk_score": 3,
+      "competition_score": 3,
+      "raw_total_score": 24,
+      "weighted_total_score": 80,
+      "strengths": [
+        "Proprietary AI chip architectures supported by strong R&D and patented innovations",
+        "Access to large-scale cloud and enterprise customers with strategic investments in cloud startups",
+        "Experienced leadership and diversified business model combining product sales and strategic investments"
+      ],
+      "risks": [
+        "High competition from dominant AI chip manufacturers like Nvidia",
+        "Technical challenges in AI chip development and integration with cloud services",
+        "Dependence on successful commercialization and market adoption of AI chips"
+      ],
+      "diligence_questions": [
+        "What are the specific performance benchmarks of TurboQuant compared to competitors?",
+        "How does Google plan to overcome technical integration challenges with cloud services?",
+        "What is the current market share of Google's AI chips in cloud data centers?",
+        "How sustainable is Google's investment strategy in startups for long-term AI chip market growth?",
+        "How does Google differentiate its AI chips from Nvidia's offerings?"
+      ],
+      "total_score": 80
+    },
+    {
+      "company_name": "Argus",
+      "stage": "Series A",
+      "recommendation": "Selective DD",
+      "thesis": "Argus presents a promising investment opportunity with its proprietary AI inference architecture optimized for edge computing and a unique AI media enablement platform, though it requires selective due diligence due to early-stage commercialization and competitive market risks.",
+      "technology_score": 4,
+      "market_score": 3,
+      "business_score": 3,
+      "team_score": 3,
+      "risk_score": 3,
+      "competition_score": 3,
+      "raw_total_score": 19,
+      "weighted_total_score": 65,
+      "strengths": [
+        "Proprietary AI inference architecture with hardware acceleration for edge computing supported by patents, providing a technological moat.",
+        "Unique integration of AI media enablement tools that connect experts and investors, expanding market reach beyond traditional semiconductor offerings.",
+        "Secured $25 million in Series A funding, demonstrating investor confidence and providing resources for growth."
+      ],
+      "risks": [
+        "Limited disclosed revenue and traction data, indicating early-stage commercialization challenges and uncertain market adoption.",
+        "Dependence on successful hardware-software integration to achieve performance and reliability, which could delay product maturity.",
+        "Operating in a highly competitive AI semiconductor market with established players and potential for competitors to replicate hardware acceleration or media enablement solutions."
+      ],
+      "diligence_questions": [
+        "What is the current stage of development and validation of Argus's proprietary AI inference architecture?",
+        "How does Argus ensure seamless hardware-software integration to maintain product performance and reliability?",
+        "What is Argus's current revenue, customer acquisition status, and market traction?",
+        "Who are the main competitors, and how does Argus differentiate itself technically and commercially?",
+        "What is the background, track record, and structure of the founding and executive team to support both AI hardware and media enablement product development?"
+      ],
+      "total_score": 65
+    },
+    {
+      "company_name": "Microsoft",
+      "stage": "Series A",
+      "recommendation": "Selective DD",
+      "thesis": "Lace presents a promising investment opportunity with its proprietary helium atom beam technology for semiconductor manufacturing, supported by strong financial backing from Microsoft, but faces typical early-stage risks related to market adoption and competition.",
+      "technology_score": 4,
+      "market_score": 3,
+      "business_score": 3,
+      "team_score": 3,
+      "risk_score": 3,
+      "competition_score": 3,
+      "raw_total_score": 19,
+      "weighted_total_score": 65,
+      "strengths": [
+        "Proprietary helium atom beam technology offers a unique and potentially superior fabrication method.",
+        "Strong financial and strategic backing from Microsoft providing credibility and resources.",
+        "Targeting a growing semiconductor market with continuous demand for advanced fabrication tools."
+      ],
+      "risks": [
+        "Adoption risk due to conservative nature of semiconductor manufacturers and high switching costs.",
+        "Dependence on continued funding and support from Microsoft for development and scaling.",
+        "Competition from established semiconductor equipment providers with entrenched customer relationships."
+      ],
+      "diligence_questions": [
+        "What is the current stage of development, validation, and customer trials of the helium atom beam technology?",
+        "How does Lace's technology compare in performance, cost, and reliability to incumbent chipmaking equipment?",
+        "What is the background and semiconductor industry experience of the founding and executive team?",
+        "What is the plan and timeline for scaling manufacturing, sales operations, and market penetration?",
+        "What contingency plans are in place if Microsoft reduces support or funding?"
+      ],
+      "total_score": 65
+    }
+  ]
+}

@@ -69,15 +69,6 @@ class CandidateCompanyFiltered(BaseModel):
     filter_reason: str = ""
 
 
-class AgentEvaluation(BaseModel):
-    company_name: str
-    score: int = Field(ge=1, le=5)
-    rationale: str
-    strengths: list[str]
-    risks: list[str]
-    diligence_questions: list[str]
-
-
 class EvaluationDimension(BaseModel):
     score: int = Field(ge=1, le=5)
     rationale: str
@@ -143,8 +134,6 @@ class CompanyDecisionSummary(BaseModel):
 class GraphState(BaseModel):
     domain: str
     user_query: str = ""
-    source_files: list[str] = Field(default_factory=list)
-    market_context: str = ""
     market_analysis: str = ""
     candidate_companies_raw: list[dict[str, Any]] = Field(default_factory=list)
     candidate_companies_filtered: list[dict[str, Any]] = Field(default_factory=list)
@@ -153,12 +142,6 @@ class GraphState(BaseModel):
     company_contexts: dict[str, str] = Field(default_factory=dict)
     product_market_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     team_risk_competition_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    technology_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    market_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    business_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    team_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    risk_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    competition_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     evaluations: list[dict[str, Any]] = Field(default_factory=list)
     selected_companies: list[dict[str, Any]] = Field(default_factory=list)
     hold_companies: list[dict[str, Any]] = Field(default_factory=list)

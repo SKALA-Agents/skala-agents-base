@@ -27,14 +27,12 @@ from investment_pipeline.tracing import (
 )
 
 from .models import (
-    AgentEvaluation,
     CandidateCompanyFiltered,
     CandidateCompanyRaw,
     CompanyDecisionSummary,
     CompanyEvaluation,
     CompanyList,
     QueryDomain,
-    EvaluationDimension,
     GraphState,
     ProductMarketEvaluation,
     ServiceConfig,
@@ -332,10 +330,6 @@ class InvestmentAnalysisService:
             ]
         )
 
-    def discover_sources(self, state: GraphState) -> GraphState:
-        state.source_files = [str(path) for path in self.source_files]
-        return state
-
     def extract_domain_from_query(self, query: str) -> str:
         normalized_query = re.sub(r"\s+", " ", query).strip()
         if not normalized_query:
@@ -365,11 +359,11 @@ class InvestmentAnalysisService:
             docs = self.retriever.invoke(
                 f"{state.domain} market size growth demand regulation trends"
             )
-        state.market_context = self.format_docs(docs)
+        market_context = self.format_docs(docs)
         response = self.llm.invoke(
             self.market_prompt.format_messages(
                 domain=state.domain,
-                context=state.market_context,
+                context=market_context,
             ),
             config=make_run_config(
                 run_name="agents.market_analysis",
@@ -618,8 +612,9 @@ class InvestmentAnalysisService:
             if item.get("name")
         }
         profiles: dict[str, dict[str, Any]] = {}
+        target_companies = state.companies[:10]
 
-        for company in state.companies[:10]:
+        def enrich_company_profile(company: str) -> tuple[str, dict[str, Any]]:
             candidate_item = candidate_index.get(company)
             candidate_evidence = self._format_candidate_evidence(candidate_item)
             web_evidence = self._search_company_web_context(company)
@@ -642,14 +637,24 @@ class InvestmentAnalysisService:
                         metadata={"domain": state.domain, "company": company},
                     ),
                 )
-                profiles[company] = profile.model_dump()
+                return company, profile.model_dump()
             except Exception:
-                profiles[company] = self._fallback_company_profile(
+                return company, self._fallback_company_profile(
                     domain=state.domain,
                     company=company,
                     candidate_item=candidate_item,
                     web_evidence=web_evidence,
                 )
+
+        max_workers = min(len(target_companies), 4) or 1
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [
+                executor.submit(enrich_company_profile, company)
+                for company in target_companies
+            ]
+            for future in futures:
+                company, profile = future.result()
+                profiles[company] = profile
 
         state.company_profiles = profiles
         return state
@@ -677,60 +682,6 @@ class InvestmentAnalysisService:
             )
         state.company_contexts = company_contexts
         return state
-
-    @staticmethod
-    def _dimension_to_agent_eval(company: str, dimension: EvaluationDimension) -> dict[str, Any]:
-        return AgentEvaluation(
-            company_name=company,
-            score=dimension.score,
-            rationale=dimension.rationale,
-            strengths=dimension.strengths,
-            risks=dimension.risks,
-            diligence_questions=dimension.diligence_questions,
-        ).model_dump()
-
-    def _sync_legacy_dimension_fields(self, state: GraphState) -> None:
-        technology: dict[str, dict[str, Any]] = {}
-        market: dict[str, dict[str, Any]] = {}
-        business: dict[str, dict[str, Any]] = {}
-        team: dict[str, dict[str, Any]] = {}
-        risk: dict[str, dict[str, Any]] = {}
-        competition: dict[str, dict[str, Any]] = {}
-
-        for company, result in state.product_market_evaluations.items():
-            technology[company] = self._dimension_to_agent_eval(
-                company,
-                EvaluationDimension.model_validate(result["technology"]),
-            )
-            market[company] = self._dimension_to_agent_eval(
-                company,
-                EvaluationDimension.model_validate(result["market"]),
-            )
-            business[company] = self._dimension_to_agent_eval(
-                company,
-                EvaluationDimension.model_validate(result["business"]),
-            )
-
-        for company, result in state.team_risk_competition_evaluations.items():
-            team[company] = self._dimension_to_agent_eval(
-                company,
-                EvaluationDimension.model_validate(result["team"]),
-            )
-            risk[company] = self._dimension_to_agent_eval(
-                company,
-                EvaluationDimension.model_validate(result["risk"]),
-            )
-            competition[company] = self._dimension_to_agent_eval(
-                company,
-                EvaluationDimension.model_validate(result["competition"]),
-            )
-
-        state.technology_evaluations = technology
-        state.market_evaluations = market
-        state.business_evaluations = business
-        state.team_evaluations = team
-        state.risk_evaluations = risk
-        state.competition_evaluations = competition
 
     def run_combined_agent_for_company(
         self,
@@ -823,7 +774,6 @@ class InvestmentAnalysisService:
                 team_risk_competition_results[company] = team_risk_competition
         state.product_market_evaluations = product_market_results
         state.team_risk_competition_evaluations = team_risk_competition_results
-        self._sync_legacy_dimension_fields(state)
         return state
 
     @staticmethod
@@ -989,12 +939,8 @@ class InvestmentAnalysisService:
         agent_output_path.write_text(
             json.dumps(
                 {
-                    "technology": state.technology_evaluations,
-                    "market": state.market_evaluations,
-                    "business": state.business_evaluations,
-                    "team": state.team_evaluations,
-                    "risk": state.risk_evaluations,
-                    "competition": state.competition_evaluations,
+                    "product_market": state.product_market_evaluations,
+                    "team_risk_competition": state.team_risk_competition_evaluations,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -1078,7 +1024,6 @@ class InvestmentAnalysisService:
 
     def build_graph(self):
         workflow = StateGraph(GraphState)
-        workflow.add_node("discover_sources", self.discover_sources)
         workflow.add_node("analyze_market", self.analyze_market)
         workflow.add_node("discover_candidate_companies", self.discover_candidate_companies)
         workflow.add_node("normalize_and_filter_candidates", self.normalize_and_filter_candidates)
@@ -1091,8 +1036,7 @@ class InvestmentAnalysisService:
         workflow.add_node("generate_investment_report", self.generate_investment_report)
         workflow.add_node("generate_hold_report", self.generate_hold_report)
 
-        workflow.set_entry_point("discover_sources")
-        workflow.add_edge("discover_sources", "analyze_market")
+        workflow.set_entry_point("analyze_market")
         workflow.add_edge("analyze_market", "discover_candidate_companies")
         workflow.add_edge("discover_candidate_companies", "normalize_and_filter_candidates")
         workflow.add_edge("normalize_and_filter_candidates", "extract_companies")
@@ -1117,18 +1061,18 @@ class InvestmentAnalysisService:
         graph = self.build_graph()
         normalized_query = re.sub(r"\s+", " ", (query or "")).strip()
         resolved_domain = domain or self.extract_domain_from_query(normalized_query)
-        initial_state = GraphState(
-            domain=resolved_domain,
-            user_query=normalized_query,
-        )
+        initial_state = {
+            "domain": resolved_domain,
+            "user_query": normalized_query,
+        }
         result = graph.invoke(
             initial_state,
             config=make_run_config(
                 run_name="agents.investment_analysis",
                 tags=parse_tags(self.config.langsmith_tags, "agents", "graph"),
                 metadata={
-                    "domain": initial_state.domain,
-                    "user_query": initial_state.user_query,
+                    "domain": resolved_domain,
+                    "user_query": normalized_query,
                 },
             ),
         )
