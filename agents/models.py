@@ -16,7 +16,7 @@ class ServiceConfig(BaseModel):
     llm_model: str = "gpt-4.1-mini"
     temperature: float = 0.1
     top_k_companies: int = 3
-    recommendation_threshold: int = 20
+    recommendation_threshold: int = 65
     langsmith_tracing: bool = Field(
         default_factory=lambda: (
             os.getenv("LANGCHAIN_TRACING_V2", "").strip().lower()
@@ -46,6 +46,27 @@ class ServiceConfig(BaseModel):
 
 class CompanyList(BaseModel):
     companies: list[str] = Field(default_factory=list)
+
+
+class QueryDomain(BaseModel):
+    domain: str
+
+
+class CandidateCompanyRaw(BaseModel):
+    name: str
+    source_url: str = ""
+    source_title: str = ""
+    snippet: str = ""
+    discovery_query: str = ""
+
+
+class CandidateCompanyFiltered(BaseModel):
+    name: str
+    source_url: str = ""
+    source_title: str = ""
+    snippet: str = ""
+    discovery_query: str = ""
+    filter_reason: str = ""
 
 
 class AgentEvaluation(BaseModel):
@@ -81,6 +102,8 @@ class TeamRiskCompetitionEvaluation(BaseModel):
 
 class CompanyEvaluation(BaseModel):
     company_name: str
+    stage: str = ""
+    recommendation: str = ""
     thesis: str
     technology_score: int = Field(ge=1, le=5)
     market_score: int = Field(ge=1, le=5)
@@ -88,12 +111,18 @@ class CompanyEvaluation(BaseModel):
     team_score: int = Field(ge=1, le=5)
     risk_score: int = Field(ge=1, le=5)
     competition_score: int = Field(ge=1, le=5)
+    raw_total_score: int = Field(default=0, ge=0)
+    weighted_total_score: int = Field(default=0, ge=0, le=100)
     strengths: list[str]
     risks: list[str]
     diligence_questions: list[str]
 
     @property
     def total_score(self) -> int:
+        if self.weighted_total_score:
+            return self.weighted_total_score
+        if self.raw_total_score:
+            return self.raw_total_score
         return (
             self.technology_score
             + self.market_score
@@ -104,12 +133,23 @@ class CompanyEvaluation(BaseModel):
         )
 
 
+class CompanyDecisionSummary(BaseModel):
+    thesis: str
+    strengths: list[str]
+    risks: list[str]
+    diligence_questions: list[str]
+
+
 class GraphState(BaseModel):
     domain: str
+    user_query: str = ""
     source_files: list[str] = Field(default_factory=list)
     market_context: str = ""
     market_analysis: str = ""
+    candidate_companies_raw: list[dict[str, Any]] = Field(default_factory=list)
+    candidate_companies_filtered: list[dict[str, Any]] = Field(default_factory=list)
     companies: list[str] = Field(default_factory=list)
+    company_profiles: dict[str, dict[str, Any]] = Field(default_factory=dict)
     company_contexts: dict[str, str] = Field(default_factory=dict)
     product_market_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)
     team_risk_competition_evaluations: dict[str, dict[str, Any]] = Field(default_factory=dict)

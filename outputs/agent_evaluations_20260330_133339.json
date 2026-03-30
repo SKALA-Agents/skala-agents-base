@@ -1,0 +1,1034 @@
+{
+  "technology": {
+    "Celestial AI": {
+      "company_name": "Celestial AI",
+      "score": 5,
+      "rationale": "Celestial AI has developed a proprietary Photonic Fabric platform with patented optical interconnect and thermal control technologies, demonstrating advanced technical innovation in AI semiconductor interconnects.",
+      "strengths": [
+        "Strong patent portfolio covering optical interconnects and thermal control systems",
+        "High technology signal rating indicating cutting-edge innovation"
+      ],
+      "risks": [
+        "High technical complexity and capital intensity of photonic semiconductor development",
+        "Potential challenges in scaling and integrating novel photonic technology with existing semiconductor systems"
+      ],
+      "diligence_questions": [
+        "What is the current stage of development and production readiness of the Photonic Fabric platform?",
+        "How does the technology performance compare to existing electrical interconnect solutions in benchmarks?"
+      ]
+    },
+    "FuriosaAI": {
+      "company_name": "FuriosaAI",
+      "score": 5,
+      "rationale": "FuriosaAI has developed an advanced AI inference accelerator chip (RNGD) with competitive power efficiency and performance, featuring 48 GB HBM3 memory and PCIe card implementation, validated by partnerships such as LG AI Research achieving 2.25x faster LLM inference compared to GPUs.",
+      "strengths": [
+        "Proprietary hardware design optimized for efficient, low-power AI inference.",
+        "Demonstrated superior performance in large language model inference validated by notable AI research labs."
+      ],
+      "risks": [
+        "Rapid AI hardware innovation could lead to technological obsolescence.",
+        "Execution risk in scaling mass production of advanced chips."
+      ],
+      "diligence_questions": [
+        "What are the key differentiators of RNGD compared to competitors' latest AI inference chips?",
+        "How mature and scalable is the manufacturing process for RNGD chips?"
+      ]
+    },
+    "Tenstorrent": {
+      "company_name": "Tenstorrent",
+      "score": 5,
+      "rationale": "Tenstorrent develops AI semiconductor chips based on RISC-V architecture optimized for AI inference and training, demonstrating strong technical leadership and innovation in scalable, high-performance AI solutions.",
+      "strengths": [
+        "Use of open RISC-V architecture enabling customization and innovation",
+        "Strong technical leadership including Jim Keller enhancing credibility and design quality"
+      ],
+      "risks": [
+        "Technical challenges in competing with established incumbents in AI chip performance",
+        "Execution risk in scaling production and maintaining chip performance at scale"
+      ],
+      "diligence_questions": [
+        "What specific performance benchmarks differentiate Tenstorrent's chips from competitors?",
+        "How does Tenstorrent plan to address manufacturing and yield challenges at scale?"
+      ]
+    },
+    "AMD": {
+      "company_name": "AMD",
+      "score": 5,
+      "rationale": "AMD has a strong technology foundation with advanced AI chips for inference and training, including CPUs, GPUs, and specialized AI silicon. Their extensive patent portfolio and ongoing investments in AI silicon technologies demonstrate technological leadership.",
+      "strengths": [
+        "Diverse product lines covering CPUs, GPUs, and AI-specific silicon.",
+        "Strong patent portfolio protecting semiconductor and AI innovations."
+      ],
+      "risks": [
+        "Rapid technological changes in AI hardware could outpace AMD's developments.",
+        "High competition from other AI chip makers like NVIDIA may pressure innovation pace."
+      ],
+      "diligence_questions": [
+        "What are AMD's plans to maintain technological leadership against competitors like NVIDIA?",
+        "How does AMD plan to adapt its AI chip designs to emerging AI workloads and architectures?"
+      ]
+    },
+    "Untether AI": {
+      "company_name": "Untether AI",
+      "score": 5,
+      "rationale": "Untether AI has developed proprietary AI inference accelerator chips that achieve industry-leading performance and energy efficiency, setting new benchmarks in the chip industry.",
+      "strengths": [
+        "Proprietary chip architecture delivering record energy efficiency and performance.",
+        "Demonstrated industry-leading benchmarks for AI inference hardware."
+      ],
+      "risks": [
+        "Dependence on continued innovation to maintain performance leadership.",
+        "High technical complexity in sustaining energy efficiency advantages."
+      ],
+      "diligence_questions": [
+        "What specific innovations differentiate Untether AI's chip architecture from competitors?",
+        "How does the company plan to sustain its technology leadership over time?"
+      ]
+    },
+    "Groq": {
+      "company_name": "Groq",
+      "score": 5,
+      "rationale": "Groq's proprietary LPU architecture demonstrates clear technological leadership in AI inference speed, supported by innovations such as SRAM design, static scheduling, tensor parallelism, and TruePoint numerics. Independent benchmarks confirm its superior performance.",
+      "strengths": [
+        "Proprietary LPU architecture with demonstrated speed leadership in independent benchmarks",
+        "Innovative technical features like SRAM design and tensor parallelism enhancing inference performance"
+      ],
+      "risks": [
+        "Maintaining technology leadership amid rapid advancements by competitors",
+        "Execution risk in scaling manufacturing without compromising quality"
+      ],
+      "diligence_questions": [
+        "How does Groq plan to sustain its technology edge against established competitors like NVIDIA and AMD?",
+        "What are the key technical challenges anticipated in scaling production of the LPU chips?"
+      ]
+    },
+    "Mythic": {
+      "company_name": "Mythic",
+      "score": 5,
+      "rationale": "Mythic's proprietary analog compute AI accelerator chips deliver up to 35 TOPS with a claimed 100x energy efficiency advantage over traditional digital architectures, addressing critical memory bottlenecks for edge AI applications.",
+      "strengths": [
+        "Proprietary analog compute architecture significantly improves energy efficiency and performance-per-watt.",
+        "Demonstrated capability of 35 TOPS, competitive with leading digital AI chips like Nvidia's Xavier AGX."
+      ],
+      "risks": [
+        "Technology adoption risk due to analog compute approach being less established than digital alternatives.",
+        "Execution risk in scaling production and maintaining chip performance at volume."
+      ],
+      "diligence_questions": [
+        "What is the maturity level and reliability of the analog compute technology in real-world deployments?",
+        "How does Mythic plan to mitigate risks related to analog compute manufacturing and yield?"
+      ]
+    },
+    "Blumind": {
+      "company_name": "Blumind",
+      "score": 5,
+      "rationale": "Blumind has developed proprietary analog semiconductor technology with granted patents, enabling ultra-low-power AI inference at the edge. Their approach is novel and distinct from traditional digital AI chips, demonstrating deep technical expertise and innovation.",
+      "strengths": [
+        "Proprietary analog AI chip technology with granted patents",
+        "Novel architecture designed from scratch for ultra-low-power edge AI inference"
+      ],
+      "risks": [
+        "Execution risk in scaling manufacturing of novel analog chips",
+        "Potential technical challenges in maintaining performance and reliability at scale"
+      ],
+      "diligence_questions": [
+        "What are the key technical differentiators of Blumind's analog AI chips compared to competitors?",
+        "How mature is the manufacturing process for their analog AI chips and what are the scalability plans?"
+      ]
+    },
+    "Lightmatter": {
+      "company_name": "Lightmatter",
+      "score": 5,
+      "rationale": "Lightmatter's proprietary photonic chip technology uses light instead of electricity to accelerate AI computing, supporting both inference and training. This novel approach offers faster and more energy-efficient AI computation, backed by strong patents and demonstrated capability with various neural network layers.",
+      "strengths": [
+        "Proprietary photonic chip technology enabling faster AI computation",
+        "Supports both inference and training for neural networks"
+      ],
+      "risks": [
+        "High capital intensity and manufacturing complexity of photonic chips",
+        "Potential technical challenges in scaling photonic technology for mass production"
+      ],
+      "diligence_questions": [
+        "What is the current manufacturing yield and scalability of the photonic chips?",
+        "How does the performance compare to leading electronic AI accelerators across diverse workloads?"
+      ]
+    },
+    "Enfabrica": {
+      "company_name": "Enfabrica",
+      "score": 4,
+      "rationale": "Enfabrica develops proprietary AI networking chips that optimize data movement with low latency and overhead, maximizing FLOPs and memory bandwidth, which is critical for AI accelerators. The upcoming chip release indicates ongoing innovation and technical advancement.",
+      "strengths": [
+        "Proprietary chip design focused on scalable, low-latency AI data movement",
+        "Strong technical focus on maximizing FLOPs and memory bandwidth in AI accelerators"
+      ],
+      "risks": [
+        "Execution risk in delivering next-generation chip on schedule",
+        "Highly competitive AI semiconductor technology landscape with established players"
+      ],
+      "diligence_questions": [
+        "What are the key technical differentiators of the upcoming chip compared to competitors?",
+        "What is the current status and timeline for the next-generation chip development and release?"
+      ]
+    }
+  },
+  "market": {
+    "Celestial AI": {
+      "company_name": "Celestial AI",
+      "score": 4,
+      "rationale": "Celestial AI targets the growing AI and data center semiconductor markets with a novel optical interconnect solution, supported by significant funding and interest from major industry players, indicating strong market potential.",
+      "strengths": [
+        "Focus on large, expanding markets such as AI hardware and data center infrastructure",
+        "Backing by major investors and board members from the semiconductor industry"
+      ],
+      "risks": [
+        "Conservative adoption tendencies in data center operators may slow uptake",
+        "Competition from established semiconductor and AI hardware companies with entrenched solutions"
+      ],
+      "diligence_questions": [
+        "What is the current customer pipeline and adoption rate among target segments?",
+        "How does Celestial AI plan to overcome market resistance to new optical interconnect technologies?"
+      ]
+    },
+    "FuriosaAI": {
+      "company_name": "FuriosaAI",
+      "score": 5,
+      "rationale": "FuriosaAI targets a growing market of enterprise AI research labs and data centers requiring high-performance AI inference hardware, with increasing demand for efficient AI compute and early adoption by significant customers like LG AI Research.",
+      "strengths": [
+        "Strong demand growth in AI hardware for data centers and enterprise AI applications.",
+        "Early adoption by reputable customers indicating market validation and traction."
+      ],
+      "risks": [
+        "Highly competitive semiconductor market dominated by established players like Nvidia.",
+        "Dependence on continued growth in AI hardware demand."
+      ],
+      "diligence_questions": [
+        "What is the total addressable market size and growth projections for AI inference accelerators?",
+        "How does FuriosaAI plan to differentiate and capture market share against dominant incumbents?"
+      ]
+    },
+    "Tenstorrent": {
+      "company_name": "Tenstorrent",
+      "score": 4,
+      "rationale": "Tenstorrent targets a growing AI hardware market including datacenter operators and strategic partners in automotive and technology sectors, supported by significant funding and partnerships indicating strong market interest.",
+      "strengths": [
+        "Strategic partnerships with Hyundai Motor Group and Samsung Catalyst Fund expanding market reach",
+        "Focus on high-demand AI workloads such as training and inference in datacenters and automotive sectors"
+      ],
+      "risks": [
+        "Highly competitive AI semiconductor market with dominant incumbents",
+        "Dependence on continued funding and partnerships to penetrate and scale market adoption"
+      ],
+      "diligence_questions": [
+        "What is Tenstorrent's go-to-market strategy to capture share from established competitors?",
+        "How diversified is the customer pipeline beyond current strategic partners?"
+      ]
+    },
+    "AMD": {
+      "company_name": "AMD",
+      "score": 5,
+      "rationale": "AMD serves a large and growing market of AI companies, cloud startups, and data center operators, with multi-year supply agreements including a major deal with OpenAI. Their broad ecosystem investments position them well in the AI semiconductor market.",
+      "strengths": [
+        "Established relationships with leading AI companies such as OpenAI.",
+        "Broad ecosystem investments via AMD Ventures supporting market expansion."
+      ],
+      "risks": [
+        "Dependence on a few large customers for significant revenue.",
+        "Potential supply chain disruptions impacting delivery and market responsiveness."
+      ],
+      "diligence_questions": [
+        "How diversified is AMD's customer base beyond major AI companies?",
+        "What measures does AMD have to mitigate supply chain risks?"
+      ]
+    },
+    "Untether AI": {
+      "company_name": "Untether AI",
+      "score": 4,
+      "rationale": "The company targets enterprises and data centers with high-performance, energy-efficient AI inference needs, a growing and competitive market with strong demand.",
+      "strengths": [
+        "Focus on energy-efficient AI inference workloads aligns with market trends.",
+        "Strong investor backing from Intel Capital and CPP Investments signals market confidence."
+      ],
+      "risks": [
+        "Highly competitive AI chip market with established players like NVIDIA and AMD.",
+        "Market adoption risk given the dominance of incumbent suppliers."
+      ],
+      "diligence_questions": [
+        "What is Untether AI's go-to-market strategy to penetrate enterprise and data center customers?",
+        "How does the company differentiate itself in a market dominated by large incumbents?"
+      ]
+    },
+    "Groq": {
+      "company_name": "Groq",
+      "score": 5,
+      "rationale": "Groq targets a high-growth market segment of AI inference chips for enterprise and data center customers, with surging demand evidenced by significant funding and valuation increases. The market is competitive but expanding rapidly.",
+      "strengths": [
+        "Strong demand growth for AI inference hardware in enterprise and data centers",
+        "Significant investor confidence reflected in large funding rounds and valuation growth"
+      ],
+      "risks": [
+        "Highly competitive market with dominant incumbents such as NVIDIA and AMD",
+        "Dependence on continued growth in AI inference demand which could fluctuate"
+      ],
+      "diligence_questions": [
+        "What is Groq's market share and customer adoption rate compared to competitors?",
+        "How sensitive is Groq's business to potential slowdowns in AI inference demand growth?"
+      ]
+    },
+    "Mythic": {
+      "company_name": "Mythic",
+      "score": 4,
+      "rationale": "Mythic targets the high-end edge AI inference market, focusing on sectors like automotive and industrial that demand high performance and energy efficiency, supported by strategic investors such as Honda.",
+      "strengths": [
+        "Focus on edge AI inference market with growing demand for energy-efficient, high-performance solutions.",
+        "Strategic partnerships and investor backing from automotive and industrial sectors validate market relevance."
+      ],
+      "risks": [
+        "Highly competitive AI chip market dominated by established players like Nvidia.",
+        "Market adoption risk given customer preference for proven digital AI accelerators."
+      ],
+      "diligence_questions": [
+        "What is the size and growth rate of the high-end edge AI inference market segments Mythic targets?",
+        "How strong are customer commitments or pilots validating demand for Mythic's analog compute chips?"
+      ]
+    },
+    "Blumind": {
+      "company_name": "Blumind",
+      "score": 4,
+      "rationale": "Blumind targets a growing market of edge device manufacturers and smart sensor producers needing low-power AI inference solutions. The analog AI chip market is emerging with significant potential, but adoption risks exist due to the new technology paradigm and competition from established digital AI chip companies.",
+      "strengths": [
+        "Focus on edge computing market with increasing demand for low-power AI",
+        "Early traction with Series A funding and industry recognition"
+      ],
+      "risks": [
+        "Market adoption risk due to novel analog AI technology",
+        "Competition from established digital AI chip companies and other analog AI startups"
+      ],
+      "diligence_questions": [
+        "What is the current market size and growth rate for ultra-low-power AI chips at the edge?",
+        "How receptive are target customers to adopting analog AI chips over digital alternatives?"
+      ]
+    },
+    "Lightmatter": {
+      "company_name": "Lightmatter",
+      "score": 5,
+      "rationale": "Lightmatter targets a large and growing market of cloud providers, AI companies, and datacenter operators demanding high-performance AI acceleration hardware. The company benefits from strong investor backing and a high valuation, reflecting market confidence amid the AI datacenter boom.",
+      "strengths": [
+        "Focus on high-demand AI datacenter and cloud customers",
+        "Strong investor backing and $4.4B valuation indicating market confidence"
+      ],
+      "risks": [
+        "Market adoption risk for novel photonic AI accelerators",
+        "Dependence on continued growth of AI datacenter investments"
+      ],
+      "diligence_questions": [
+        "What is the current pipeline and traction with major cloud and AI customers?",
+        "How does Lightmatter plan to overcome customer hesitancy towards new photonic technology?"
+      ]
+    },
+    "Enfabrica": {
+      "company_name": "Enfabrica",
+      "score": 5,
+      "rationale": "The AI semiconductor market is rapidly growing with increasing demand for efficient AI networking solutions in data centers and AI hardware. Enfabrica targets AI hardware manufacturers and data center operators, a large and expanding customer base, supported by strong investor interest and funding.",
+      "strengths": [
+        "Targeting high-growth AI hardware and data center markets requiring efficient AI networking",
+        "Strong investor backing including Nvidia and Arm signals market confidence"
+      ],
+      "risks": [
+        "Highly competitive market with established semiconductor players",
+        "Dependence on continued investor funding to capture market opportunities"
+      ],
+      "diligence_questions": [
+        "What is the size and growth rate of the addressable market for AI networking chips?",
+        "Who are the main competitors and what is Enfabrica's market positioning against them?"
+      ]
+    }
+  },
+  "business": {
+    "Celestial AI": {
+      "company_name": "Celestial AI",
+      "score": 4,
+      "rationale": "Celestial AI has secured substantial Series C funding and is positioned for growth with a clear business model selling photonic interconnect technology to semiconductor and data infrastructure companies, but faces risks from capital intensity and competitive pressures.",
+      "strengths": [
+        "Strong financial backing with $250 million Series C funding and a $2.5 billion valuation",
+        "Clear business model targeting semiconductor and data center customers with proprietary technology"
+      ],
+      "risks": [
+        "High capital requirements may strain resources and delay profitability",
+        "Dependence on successful market adoption and integration with customer systems"
+      ],
+      "diligence_questions": [
+        "What is the current revenue and customer contract status?",
+        "What are the plans and timeline for scaling manufacturing and commercialization?"
+      ]
+    },
+    "FuriosaAI": {
+      "company_name": "FuriosaAI",
+      "score": 4,
+      "rationale": "FuriosaAI has secured significant funding ($125M Series C bridge and plans for $300-500M round) to scale production and global expansion, with a clear business model selling AI inference chips and hardware to enterprise customers, but faces execution and competitive risks.",
+      "strengths": [
+        "Strong financial backing enabling scale and production expansion.",
+        "Established partnerships and customer base supporting revenue generation."
+      ],
+      "risks": [
+        "Execution risk in scaling mass production and global business expansion.",
+        "Competitive pressure from dominant incumbents may impact pricing and margins."
+      ],
+      "diligence_questions": [
+        "What is the current revenue run rate and customer pipeline?",
+        "What are the go-to-market and scaling strategies to ensure sustainable growth and profitability?"
+      ]
+    },
+    "Tenstorrent": {
+      "company_name": "Tenstorrent",
+      "score": 4,
+      "rationale": "Tenstorrent has secured substantial venture and strategic funding, enabling R&D and commercialization efforts, with a business model focused on designing and selling AI chips to key AI hardware customers.",
+      "strengths": [
+        "Strong funding rounds totaling over $693M supporting growth and R&D",
+        "Business model targeting multiple customer segments including datacenters and automotive partners"
+      ],
+      "risks": [
+        "Execution risk in scaling production and commercial adoption",
+        "Reliance on continuous funding to sustain R&D and market expansion"
+      ],
+      "diligence_questions": [
+        "What are the current revenue streams and customer commitments?",
+        "What is the plan to achieve profitability and reduce funding dependency?"
+      ]
+    },
+    "AMD": {
+      "company_name": "AMD",
+      "score": 5,
+      "rationale": "AMD's business model of chip sales and licensing to major AI and cloud customers is validated by large deals and strong traction signals. Their multi-year agreements and ecosystem investments provide a durable competitive moat and revenue visibility.",
+      "strengths": [
+        "Multi-year supply agreements with leading AI firms providing revenue stability.",
+        "Strong market traction and investment signals indicating business momentum."
+      ],
+      "risks": [
+        "Revenue concentration risk due to dependence on large customers.",
+        "Competitive pressure could impact pricing and margins."
+      ],
+      "diligence_questions": [
+        "What is the revenue breakdown by customer and product line?",
+        "How does AMD plan to sustain margins amid intense competition?"
+      ]
+    },
+    "Untether AI": {
+      "company_name": "Untether AI",
+      "score": 3,
+      "rationale": "Untether AI has secured significant funding and investor support but faces execution risks in scaling production and market adoption.",
+      "strengths": [
+        "Successful Series B funding round raising $125 million from reputable investors.",
+        "Clear business model focused on developing and selling specialized AI inference chips."
+      ],
+      "risks": [
+        "Execution risk in scaling production and achieving broad market adoption.",
+        "Dependence on continuous innovation to maintain competitive advantage."
+      ],
+      "diligence_questions": [
+        "What are the company's plans and timelines for scaling manufacturing and sales?",
+        "How does Untether AI plan to mitigate execution risks and ensure customer acquisition?"
+      ]
+    },
+    "Groq": {
+      "company_name": "Groq",
+      "score": 4,
+      "rationale": "Groq has a solid business model selling AI inference chips and hardware solutions to enterprise customers, supported by strong investor backing and capital for scaling. However, execution risks remain in manufacturing scale-up and competitive positioning.",
+      "strengths": [
+        "Strong investor backing with $750 million raised and $6.9 billion valuation",
+        "Clear focus on enterprise and data center customers with tailored hardware solutions"
+      ],
+      "risks": [
+        "Execution risk in scaling manufacturing and maintaining supply chain reliability",
+        "Competitive pressure from established semiconductor companies with larger resources"
+      ],
+      "diligence_questions": [
+        "What is Groq's go-to-market strategy to expand enterprise and data center customer base?",
+        "How does Groq plan to mitigate execution risks in scaling production and supply chain management?"
+      ]
+    },
+    "Mythic": {
+      "company_name": "Mythic",
+      "score": 3,
+      "rationale": "Mythic has raised substantial funding ($178M total, $125M recent round) and has strategic investors, but faces execution risks in scaling production and commercialization in a competitive market.",
+      "strengths": [
+        "Strong financial backing with multiple funding rounds and strategic investors.",
+        "Clear business model focused on designing and selling AI accelerator chips for edge devices."
+      ],
+      "risks": [
+        "Execution risk in scaling manufacturing and achieving market penetration.",
+        "Dependence on continued funding for R&D and commercialization efforts."
+      ],
+      "diligence_questions": [
+        "What is Mythic's current revenue and customer traction status?",
+        "What are the company's plans and timeline for scaling production and achieving profitability?"
+      ]
+    },
+    "Blumind": {
+      "company_name": "Blumind",
+      "score": 3,
+      "rationale": "Blumind has secured $20 million CAD in Series A funding to accelerate commercialization, indicating investor confidence. However, execution risks remain in scaling manufacturing and commercialization. The business depends on continued funding and successful market penetration to achieve sustainable growth.",
+      "strengths": [
+        "Successful Series A funding round with $20 million CAD raised",
+        "Clear business model targeting edge AI chip commercialization"
+      ],
+      "risks": [
+        "Execution risk in scaling manufacturing and commercialization",
+        "Dependence on continued funding for R&D and scaling operations"
+      ],
+      "diligence_questions": [
+        "What is the current revenue or customer pipeline status post-Series A?",
+        "What are the plans and timelines for scaling manufacturing and achieving commercial volume?"
+      ]
+    },
+    "Lightmatter": {
+      "company_name": "Lightmatter",
+      "score": 4,
+      "rationale": "Lightmatter operates a B2B semiconductor sales and licensing model targeting large AI datacenter customers, supported by multiple funding rounds totaling $850 million. The company is scaling production and preparing for a potential IPO, indicating strong business momentum.",
+      "strengths": [
+        "Significant funding raised ($850M) enabling scale-up",
+        "Clear go-to-market focus on cloud and AI datacenter operators"
+      ],
+      "risks": [
+        "Competition from established semiconductor companies like NVIDIA",
+        "High capital requirements and long sales cycles in semiconductor industry"
+      ],
+      "diligence_questions": [
+        "What is the current revenue and customer adoption status?",
+        "What are the key partnerships or alliances to accelerate market penetration?"
+      ]
+    },
+    "Enfabrica": {
+      "company_name": "Enfabrica",
+      "score": 3,
+      "rationale": "Enfabrica has secured significant Series C funding led by reputable investors, enabling R&D and scaling. However, execution risks remain in delivering products on schedule and scaling business operations in a competitive environment.",
+      "strengths": [
+        "Strong investor backing providing capital for growth and R&D",
+        "Clear business model focused on selling AI networking chips to defined customer segments"
+      ],
+      "risks": [
+        "Execution risk in product delivery and scaling operations",
+        "Dependence on ongoing funding rounds to sustain R&D and business growth"
+      ],
+      "diligence_questions": [
+        "What is the current revenue and customer traction status?",
+        "What are the plans and milestones for scaling manufacturing and sales post-chip release?"
+      ]
+    }
+  },
+  "team": {
+    "Celestial AI": {
+      "company_name": "Celestial AI",
+      "score": 4,
+      "rationale": "The team has strong signals with experienced leadership, including industry board members such as Intel CEO Lip-Bu Tan, and has successfully raised significant funding indicating investor confidence.",
+      "strengths": [
+        "Presence of high-profile industry board members",
+        "Successful $250 million Series C funding round led by Fidelity"
+      ],
+      "risks": [
+        "Potential challenges in scaling photonic semiconductor technology",
+        "Dependence on continued ability to attract top talent in a competitive sector"
+      ],
+      "diligence_questions": [
+        "What is the background and track record of the founding and executive team?",
+        "How does the team plan to scale and retain talent as the company grows?"
+      ]
+    },
+    "FuriosaAI": {
+      "company_name": "FuriosaAI",
+      "score": 4,
+      "rationale": "The team has demonstrated strong capability in developing advanced AI inference chips and securing significant funding, indicating solid leadership and execution potential.",
+      "strengths": [
+        "Successfully developed the RNGD AI accelerator chip with competitive performance.",
+        "Secured $125M Series C bridge funding and preparing for a large funding round ahead of IPO."
+      ],
+      "risks": [
+        "Scaling mass production of advanced AI chips poses execution challenges.",
+        "Maintaining pace with rapid AI hardware innovation requires continuous technical expertise."
+      ],
+      "diligence_questions": [
+        "What is the team's experience in semiconductor mass production and supply chain management?",
+        "How does the team plan to sustain innovation to avoid technological obsolescence?"
+      ]
+    },
+    "Tenstorrent": {
+      "company_name": "Tenstorrent",
+      "score": 5,
+      "rationale": "The team benefits from strong technical leadership, notably Jim Keller, and has successfully attracted significant strategic investments, indicating high confidence in their capabilities.",
+      "strengths": [
+        "Presence of renowned AI chip architect Jim Keller.",
+        "Ability to secure large funding rounds and strategic partners like Hyundai and Samsung."
+      ],
+      "risks": [
+        "Potential challenges in scaling the team as the company grows.",
+        "Dependence on key individuals for technical innovation."
+      ],
+      "diligence_questions": [
+        "What is the depth and experience of the broader engineering and management team beyond key leaders?",
+        "How does the company plan to retain and attract top talent in a competitive market?"
+      ]
+    },
+    "AMD": {
+      "company_name": "AMD",
+      "score": 5,
+      "rationale": "AMD has a highly experienced team with strong signals in technology, market, traction, and team quality, supported by a broad ecosystem investment strategy.",
+      "strengths": [
+        "Strong leadership with proven track record in semiconductor and AI chip development",
+        "Robust ecosystem engagement through AMD Ventures investing across AI hardware and software"
+      ],
+      "risks": [
+        "Potential challenges in scaling AI-specific talent rapidly",
+        "Managing innovation pace alongside large corporate structure"
+      ],
+      "diligence_questions": [
+        "What is the composition and experience of the AI-specific leadership team?",
+        "How does AMD attract and retain top AI semiconductor talent amid competition?"
+      ]
+    },
+    "Untether AI": {
+      "company_name": "Untether AI",
+      "score": 4,
+      "rationale": "The team has demonstrated strong capability by securing significant funding from reputable investors and developing industry-leading AI inference chips.",
+      "strengths": [
+        "Strong investor backing including Intel Capital and CPP Investments",
+        "Proven ability to develop proprietary chip architecture with record benchmarks"
+      ],
+      "risks": [
+        "Limited information on team size and depth",
+        "Potential challenges in scaling operations and execution"
+      ],
+      "diligence_questions": [
+        "What is the background and experience of the founding and executive team?",
+        "How is the team structured to support scaling production and market adoption?"
+      ]
+    },
+    "Groq": {
+      "company_name": "Groq",
+      "score": 4,
+      "rationale": "Groq has a strong team signal rated 4, supported by significant investor backing and the ability to raise large funding rounds, indicating experienced leadership and execution capability.",
+      "strengths": [
+        "Strong investor backing including major firms like Cisco and BlackRock",
+        "Demonstrated ability to raise substantial capital ($750M in latest round)"
+      ],
+      "risks": [
+        "Execution risk in scaling manufacturing and maintaining technology leadership",
+        "Potential challenges in sustaining rapid growth and innovation pace"
+      ],
+      "diligence_questions": [
+        "What is the background and track record of the founding and executive team?",
+        "How does the team plan to manage scaling manufacturing and R&D effectively?"
+      ]
+    },
+    "Mythic": {
+      "company_name": "Mythic",
+      "score": 4,
+      "rationale": "Mythic has a strong team signal supported by successful funding rounds and strategic investor backing, indicating capable leadership and technical expertise.",
+      "strengths": [
+        "Experienced leadership demonstrated by securing $178M across 10 funding rounds",
+        "Strong strategic partnerships including investors like Honda enhancing credibility"
+      ],
+      "risks": [
+        "Potential gaps in scaling operational execution as company grows",
+        "Uncertainty in maintaining innovation pace in a fast-evolving AI semiconductor field"
+      ],
+      "diligence_questions": [
+        "What is the background and track record of the founding and executive team?",
+        "How does the team plan to scale operations and talent to meet growth demands?"
+      ]
+    },
+    "Blumind": {
+      "company_name": "Blumind",
+      "score": 4,
+      "rationale": "The team is rated highly due to leadership by industry visionaries and demonstrated ability to secure significant Series A funding, indicating strong expertise and investor confidence.",
+      "strengths": [
+        "Led by industry visionaries with deep-tech expertise",
+        "Successfully raised $20 million CAD in Series A funding"
+      ],
+      "risks": [
+        "Potential gaps in scaling manufacturing and commercialization capabilities",
+        "Uncertainty in team experience with market adoption of novel analog AI technology"
+      ],
+      "diligence_questions": [
+        "What is the team's track record in semiconductor product commercialization?",
+        "How experienced is the team in scaling manufacturing operations for analog chips?"
+      ]
+    },
+    "Lightmatter": {
+      "company_name": "Lightmatter",
+      "score": 4,
+      "rationale": "The team has demonstrated strong capability to raise significant capital ($850M total, $400M in latest round) and attract high-profile investors like Google, indicating strong leadership and execution skills.",
+      "strengths": [
+        "Experienced leadership with successful fundraising history",
+        "Strong investor backing including strategic partners"
+      ],
+      "risks": [
+        "Potential challenges in scaling manufacturing of complex photonic chips",
+        "Dependence on continued innovation to maintain technology edge"
+      ],
+      "diligence_questions": [
+        "What is the background and track record of the founding and executive team?",
+        "How does the team plan to scale manufacturing and operations?"
+      ]
+    },
+    "Enfabrica": {
+      "company_name": "Enfabrica",
+      "score": 4,
+      "rationale": "The team has a strong signal rating of 4, indicating capable leadership and technical expertise, supported by significant investor confidence including Nvidia and Arm.",
+      "strengths": [
+        "Experienced leadership with strong investor backing from Nvidia and Arm",
+        "Technical expertise in AI networking chip design focused on scalable, low-latency data movement"
+      ],
+      "risks": [
+        "Execution risk in delivering next-generation chip on schedule",
+        "Dependence on continued investor funding for R&D and scaling"
+      ],
+      "diligence_questions": [
+        "What is the team's track record in delivering complex semiconductor products on time?",
+        "How does the team plan to mitigate execution risks for the upcoming chip release?"
+      ]
+    }
+  },
+  "risk": {
+    "Celestial AI": {
+      "company_name": "Celestial AI",
+      "score": 3,
+      "rationale": "The company faces notable risks from the capital-intensive and technically complex nature of photonic semiconductor development, competition from established players, and market adoption challenges in conservative data center environments.",
+      "strengths": [
+        "Proprietary patented technology providing some protection",
+        "Strong funding base to support development and commercialization"
+      ],
+      "risks": [
+        "High capital intensity and technical complexity of product development",
+        "Dependence on adoption of new optical interconnect technology in conservative markets"
+      ],
+      "diligence_questions": [
+        "What is the current burn rate and runway given capital intensity?",
+        "How is the company addressing market adoption barriers in data centers?"
+      ]
+    },
+    "FuriosaAI": {
+      "company_name": "FuriosaAI",
+      "score": 3,
+      "rationale": "FuriosaAI faces significant risks from a highly competitive market dominated by established players and execution challenges in scaling production, alongside dependency on AI hardware demand growth.",
+      "strengths": [
+        "Strong funding position to support scaling and R&D.",
+        "Early adoption by notable AI research entities like LG AI Research reduces market risk."
+      ],
+      "risks": [
+        "Competition from dominant incumbents such as Nvidia.",
+        "Potential technological obsolescence due to rapid innovation in AI hardware."
+      ],
+      "diligence_questions": [
+        "What are the contingency plans if AI hardware demand growth slows?",
+        "How does FuriosaAI mitigate risks related to production scale-up failures?"
+      ]
+    },
+    "Tenstorrent": {
+      "company_name": "Tenstorrent",
+      "score": 3,
+      "rationale": "The company faces execution risks related to scaling production and market adoption, as well as the need for continued funding in a highly competitive AI semiconductor market.",
+      "strengths": [
+        "Strong funding base with over $693M raised in Series D and ongoing funding talks.",
+        "Strategic partnerships that may mitigate some market and execution risks."
+      ],
+      "risks": [
+        "Highly competitive market with established incumbents.",
+        "Dependence on continuous capital for R&D and commercialization."
+      ],
+      "diligence_questions": [
+        "What is the company's roadmap and timeline for scaling production and achieving market penetration?",
+        "How resilient is the company's financial runway if funding conditions tighten?"
+      ]
+    },
+    "AMD": {
+      "company_name": "AMD",
+      "score": 3,
+      "rationale": "AMD faces significant risks from intense competition, customer concentration, rapid technology shifts, and supply chain vulnerabilities.",
+      "strengths": [
+        "Multi-year supply agreements with leading AI firms reduce short-term revenue volatility",
+        "Strong patent portfolio provides some protection against competitive threats"
+      ],
+      "risks": [
+        "High competition from dominant players like NVIDIA",
+        "Dependence on a few large customers for significant revenue exposes AMD to concentration risk"
+      ],
+      "diligence_questions": [
+        "How does AMD plan to mitigate supply chain disruptions?",
+        "What contingency plans exist if major customers reduce orders?"
+      ]
+    },
+    "Untether AI": {
+      "company_name": "Untether AI",
+      "score": 3,
+      "rationale": "The company faces notable risks from intense competition, execution challenges, and the need for continuous innovation to maintain leadership.",
+      "strengths": [
+        "Proprietary technology providing a competitive moat",
+        "Strong financial backing to support development and scaling"
+      ],
+      "risks": [
+        "Highly competitive market with established players like NVIDIA and AMD",
+        "Execution risk in scaling production and achieving market adoption"
+      ],
+      "diligence_questions": [
+        "What are the company's plans to mitigate execution risks in production scaling?",
+        "How does Untether AI plan to sustain innovation against larger competitors?"
+      ]
+    },
+    "Groq": {
+      "company_name": "Groq",
+      "score": 3,
+      "rationale": "Groq faces moderate risk due to a highly competitive AI chip market and dependence on continued AI inference demand growth, alongside execution risks in scaling production and maintaining technology leadership.",
+      "strengths": [
+        "Strong proprietary technology with demonstrated speed leadership",
+        "Significant capital raised to support scaling and R&D"
+      ],
+      "risks": [
+        "Competition from established players like NVIDIA and AMD",
+        "Dependence on sustained growth in AI inference demand"
+      ],
+      "diligence_questions": [
+        "What are Groq's strategies to mitigate competition from dominant incumbents?",
+        "How sensitive is Groq's business model to fluctuations in AI inference market demand?"
+      ]
+    },
+    "Mythic": {
+      "company_name": "Mythic",
+      "score": 3,
+      "rationale": "Mythic faces significant risks from a competitive market dominated by incumbents, technology adoption challenges, and execution risks in scaling production and commercialization.",
+      "strengths": [
+        "Proprietary analog compute technology offering a 100x energy efficiency advantage",
+        "Strong funding base with $125M recent raise to support R&D and commercialization"
+      ],
+      "risks": [
+        "High competition from established players like Nvidia with strong market presence",
+        "Technology adoption risk due to analog compute approach being less proven in market"
+      ],
+      "diligence_questions": [
+        "What are the key milestones and timelines for production scaling?",
+        "How does Mythic mitigate risks related to analog compute technology adoption?"
+      ]
+    },
+    "Blumind": {
+      "company_name": "Blumind",
+      "score": 3,
+      "rationale": "Moderate risk exists due to execution challenges in manufacturing and commercialization, competition from established players, and market adoption uncertainties inherent in a new technology paradigm.",
+      "strengths": [
+        "Proprietary analog semiconductor technology with granted patents",
+        "Strong funding base to support R&D and scaling efforts"
+      ],
+      "risks": [
+        "Execution risk in scaling manufacturing and commercialization",
+        "Market adoption risk due to novel analog AI technology paradigm"
+      ],
+      "diligence_questions": [
+        "What are the key milestones and timelines for manufacturing scale-up?",
+        "How does Blumind plan to mitigate market adoption risks for analog AI chips?"
+      ]
+    },
+    "Lightmatter": {
+      "company_name": "Lightmatter",
+      "score": 3,
+      "rationale": "The company faces significant risks including high capital intensity, manufacturing complexity, competition from established players, and market adoption uncertainty for novel photonic AI accelerators.",
+      "strengths": [
+        "Proprietary photonic technology offers differentiation",
+        "Strong market demand from AI datacenter growth supports opportunity"
+      ],
+      "risks": [
+        "High capital and manufacturing complexity of photonic chips",
+        "Market adoption risk for new photonic AI accelerators"
+      ],
+      "diligence_questions": [
+        "What are the key technical and manufacturing risks and mitigation plans?",
+        "How does the company plan to address market adoption challenges?"
+      ]
+    },
+    "Enfabrica": {
+      "company_name": "Enfabrica",
+      "score": 3,
+      "rationale": "The company faces moderate risk due to a highly competitive AI semiconductor market and execution challenges, balanced by strong funding and proprietary technology.",
+      "strengths": [
+        "Strong investor backing providing financial runway",
+        "Proprietary chip design focused on optimizing AI data movement"
+      ],
+      "risks": [
+        "Highly competitive market with established players",
+        "Execution risk in delivering next-generation chip on schedule"
+      ],
+      "diligence_questions": [
+        "What are the key milestones and timelines for the next-generation chip release?",
+        "How dependent is the company on future funding rounds to sustain R&D and scaling?"
+      ]
+    }
+  },
+  "competition": {
+    "Celestial AI": {
+      "company_name": "Celestial AI",
+      "score": 3,
+      "rationale": "Celestial AI operates in a competitive landscape with established semiconductor and AI hardware companies, but its proprietary photonic fabric technology and patents provide a differentiated position.",
+      "strengths": [
+        "Strong patent portfolio on optical interconnects and thermal control",
+        "Backing by significant funding and industry partnerships"
+      ],
+      "risks": [
+        "Competition from large, established semiconductor and AI hardware companies",
+        "Potential for competitors to develop alternative interconnect technologies"
+      ],
+      "diligence_questions": [
+        "Who are the main direct competitors and how does Celestial AI differentiate?",
+        "What is the company's strategy to maintain technological leadership against incumbents?"
+      ]
+    },
+    "FuriosaAI": {
+      "company_name": "FuriosaAI",
+      "score": 3,
+      "rationale": "The company competes in a market with established giants like Nvidia but differentiates with proprietary hardware design and energy-efficient AI inference chips targeting data centers.",
+      "strengths": [
+        "Proprietary RNGD chip with 48 GB HBM3 memory offering better power efficiency than GPUs.",
+        "Partnerships with enterprise AI research labs and data centers validate product-market fit."
+      ],
+      "risks": [
+        "Dominance of established competitors with larger resources and market share.",
+        "Potential for rapid technological advancements by competitors to erode FuriosaAI's advantage."
+      ],
+      "diligence_questions": [
+        "How does FuriosaAI plan to defend its market share against Nvidia and other incumbents?",
+        "What is the roadmap for future product improvements to maintain competitive edge?"
+      ]
+    },
+    "Tenstorrent": {
+      "company_name": "Tenstorrent",
+      "score": 3,
+      "rationale": "Tenstorrent competes in a crowded AI semiconductor market with established players, but differentiates through RISC-V architecture and strategic partnerships.",
+      "strengths": [
+        "Focus on RISC-V architecture optimized for AI workloads, which is a growing niche.",
+        "Strong strategic partnerships with industry leaders like Hyundai and Samsung."
+      ],
+      "risks": [
+        "Competition from well-established incumbents with larger scale and resources.",
+        "Market adoption risk given entrenched alternatives and customer preferences."
+      ],
+      "diligence_questions": [
+        "How does Tenstorrent's technology performance compare to leading competitors?",
+        "What is the company's strategy to gain market share against entrenched incumbents?"
+      ]
+    },
+    "AMD": {
+      "company_name": "AMD",
+      "score": 4,
+      "rationale": "AMD competes in a highly competitive AI semiconductor market with strong incumbents but leverages a broad product portfolio and ecosystem investments.",
+      "strengths": [
+        "Diverse product lines including CPUs, GPUs, and specialized AI silicon technologies",
+        "Established market presence with multi-year deals and ecosystem partnerships"
+      ],
+      "risks": [
+        "Dominance of competitors such as NVIDIA in AI chip market",
+        "Rapid technological changes require continuous innovation to maintain competitiveness"
+      ],
+      "diligence_questions": [
+        "What differentiates AMD's AI chips from competitors' offerings?",
+        "How does AMD plan to sustain innovation pace against leading rivals?"
+      ]
+    },
+    "Untether AI": {
+      "company_name": "Untether AI",
+      "score": 4,
+      "rationale": "Untether AI competes in a crowded market but differentiates through superior energy efficiency and performance benchmarks, supported by strong investor confidence.",
+      "strengths": [
+        "Industry-leading performance and energy efficiency benchmarks",
+        "Backing from major investors signaling market confidence"
+      ],
+      "risks": [
+        "Competition from well-established semiconductor companies with larger resources",
+        "Pressure to continuously innovate to maintain competitive edge"
+      ],
+      "diligence_questions": [
+        "How does Untether AI's technology compare in cost and scalability to competitors?",
+        "What is the company's go-to-market strategy against dominant players like NVIDIA and AMD?"
+      ]
+    },
+    "Groq": {
+      "company_name": "Groq",
+      "score": 4,
+      "rationale": "Groq competes in a challenging market with established incumbents but differentiates itself through proprietary LPU architecture and leading benchmark performance, supported by strong market signals and traction.",
+      "strengths": [
+        "Proprietary LPU architecture with independent benchmark leadership",
+        "Strong market traction and valuation growth indicating competitive positioning"
+      ],
+      "risks": [
+        "Dominance of large competitors like NVIDIA and AMD with extensive resources",
+        "Potential for rapid technological advancements by competitors eroding Groq's advantage"
+      ],
+      "diligence_questions": [
+        "How defensible is Groq's LPU architecture against competitor innovations?",
+        "What is Groq's go-to-market strategy to capture and defend market share against incumbents?"
+      ]
+    },
+    "Mythic": {
+      "company_name": "Mythic",
+      "score": 4,
+      "rationale": "Mythic competes in a highly competitive AI chip market but differentiates with its analog compute architecture and energy efficiency, positioning it well against incumbents like Nvidia.",
+      "strengths": [
+        "Unique analog compute architecture delivering superior energy efficiency and performance-per-watt",
+        "Focused on high-end edge AI inference markets such as automotive and industrial sectors"
+      ],
+      "risks": [
+        "Dominance of established competitors like Nvidia with entrenched customer relationships",
+        "Potential for competitors to develop similar or superior digital or analog solutions"
+      ],
+      "diligence_questions": [
+        "How does Mythic plan to defend its technology moat against competitors?",
+        "What is the current market share and customer adoption compared to key competitors?"
+      ]
+    },
+    "Blumind": {
+      "company_name": "Blumind",
+      "score": 3,
+      "rationale": "Competition is moderate with established digital AI chip companies and other analog AI startups present, but Blumind's novel approach and proprietary technology provide differentiation.",
+      "strengths": [
+        "Proprietary analog AI technology differentiates from digital AI chips",
+        "Granted patents provide intellectual property moat"
+      ],
+      "risks": [
+        "Competition from established digital AI chip companies",
+        "Emerging analog AI startups targeting similar markets"
+      ],
+      "diligence_questions": [
+        "Who are Blumind's main competitors and how does their technology compare?",
+        "What is Blumind's strategy to maintain competitive advantage against digital AI chip incumbents?"
+      ]
+    },
+    "Lightmatter": {
+      "company_name": "Lightmatter",
+      "score": 4,
+      "rationale": "Lightmatter competes against established semiconductor giants like NVIDIA but differentiates with proprietary photonic chip technology that promises faster and more energy-efficient AI computation.",
+      "strengths": [
+        "Unique photonic chip technology providing performance and efficiency advantages",
+        "Strong valuation and funding enable competitive scale and market entry"
+      ],
+      "risks": [
+        "Competition from well-established semiconductor companies with large resources",
+        "Potential for rapid technological advancements by competitors"
+      ],
+      "diligence_questions": [
+        "How does Lightmatter's technology compare in performance and cost to competitors?",
+        "What is the company's strategy to defend against competitive threats from incumbents?"
+      ]
+    },
+    "Enfabrica": {
+      "company_name": "Enfabrica",
+      "score": 3,
+      "rationale": "Competition is moderate with established players in the AI semiconductor space, but Enfabrica's focus on AI networking chips and backing by Nvidia and Arm provide differentiation.",
+      "strengths": [
+        "Niche focus on AI networking silicon optimizing data movement",
+        "Strong strategic investors like Nvidia and Arm enhancing competitive positioning"
+      ],
+      "risks": [
+        "Presence of established competitors in AI semiconductor market",
+        "Potential for competitors to develop similar low-latency networking solutions"
+      ],
+      "diligence_questions": [
+        "Who are the main direct competitors in AI networking chips and how does Enfabrica differentiate?",
+        "What barriers to entry or IP protections does Enfabrica have against competitors?"
+      ]
+    }
+  }
+}

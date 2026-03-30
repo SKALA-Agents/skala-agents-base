@@ -18,6 +18,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langgraph.graph import END, StateGraph
 
 from investment_pipeline.serpapi import serpapi_client
+from investment_pipeline.models import CompanyProfile
+from investment_pipeline.scoring import STAGE_WEIGHTS, to_recommendation, weighted_score
 from investment_pipeline.tracing import (
     apply_langsmith_env,
     make_run_config,
@@ -26,8 +28,12 @@ from investment_pipeline.tracing import (
 
 from .models import (
     AgentEvaluation,
+    CandidateCompanyFiltered,
+    CandidateCompanyRaw,
+    CompanyDecisionSummary,
     CompanyEvaluation,
     CompanyList,
+    QueryDomain,
     EvaluationDimension,
     GraphState,
     ProductMarketEvaluation,
@@ -47,6 +53,37 @@ HARDCODED_AI_SEMICONDUCTOR_COMPANIES = [
     "EnCharge AI",
     "Etched",
 ]
+
+COMPANY_NAME_BLOCKLIST = {
+    "ai",
+    "startup",
+    "startups",
+    "semiconductor",
+    "semiconductors",
+    "chip",
+    "chips",
+    "accelerator",
+    "accelerators",
+    "hardware",
+    "inference",
+    "training",
+    "funding",
+    "companies",
+    "company",
+    "venture",
+    "backed",
+}
+
+COMPANY_SNIPPET_BLOCKLIST = {
+    "market report",
+    "industry report",
+    "wikipedia",
+    "top startups",
+    "list of",
+    "ranking",
+    "comparison",
+    "news",
+}
 
 
 class InvestmentAnalysisService:
@@ -219,16 +256,25 @@ class InvestmentAnalysisService:
         return cleaned[:10]
 
     def _build_prompts(self) -> None:
+        self.company_profile_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", self.load_prompt("company_profile_enrichment_prompt.md")),
+                (
+                    "human",
+                    "Domain: {domain}\nCompany: {company}\nExisting candidate evidence:\n{candidate_evidence}\nWeb evidence:\n{web_evidence}",
+                ),
+            ]
+        )
         self.product_market_prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", self.load_prompt("product_market_evaluation_prompt.md")),
-                ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
+                ("human", "Domain: {domain}\nCompany: {company}\nContext:\n{context}"),
             ]
         )
         self.team_risk_competition_prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", self.load_prompt("team_risk_competition_evaluation_prompt.md")),
-                ("human", "도메인: {domain}\n회사명: {company}\n문맥:\n{context}"),
+                ("human", "Domain: {domain}\nCompany: {company}\nContext:\n{context}"),
             ]
         )
         self.ranking_prompt = ChatPromptTemplate.from_messages(
@@ -236,7 +282,7 @@ class InvestmentAnalysisService:
                 ("system", self.load_prompt("ranking_prompt.md")),
                 (
                     "human",
-                    "도메인: {domain}\n회사명: {company}\n제품/시장 통합 평가:\n{product_market_json}\n팀/리스크/경쟁 통합 평가:\n{team_risk_competition_json}",
+                    "Domain: {domain}\nCompany: {company}\nStage: {stage}\nWeighted total score: {weighted_total_score}\nRecommendation: {recommendation}\nProduct/market evaluation:\n{product_market_json}\nTeam/risk/competition evaluation:\n{team_risk_competition_json}",
                 ),
             ]
         )
@@ -245,7 +291,7 @@ class InvestmentAnalysisService:
                 ("system", self.load_prompt("final_report_prompt.md")),
                 (
                     "human",
-                    "도메인: {domain}\n시장 분석:\n{market_analysis}\n정책 결정: {policy_decision}\n정책 사유: {policy_reason}\n평가 결과 JSON:\n{evaluations_json}\n선정 기업 JSON:\n{selected_json}\n보류 기업 JSON:\n{hold_json}",
+                    "Domain: {domain}\nMarket analysis:\n{market_analysis}\nPolicy decision: {policy_decision}\nPolicy reason: {policy_reason}\nEvaluation JSON:\n{evaluations_json}\nSelected companies JSON:\n{selected_json}\nHold companies JSON:\n{hold_json}",
                 ),
             ]
         )
@@ -254,7 +300,7 @@ class InvestmentAnalysisService:
                 ("system", self.load_prompt("hold_report_prompt.md")),
                 (
                     "human",
-                    "도메인: {domain}\n시장 분석:\n{market_analysis}\n정책 사유: {policy_reason}\n보류 기업 JSON:\n{hold_json}",
+                    "Domain: {domain}\nMarket analysis:\n{market_analysis}\nPolicy reason: {policy_reason}\nHold companies JSON:\n{hold_json}",
                 ),
             ]
         )
@@ -265,6 +311,15 @@ class InvestmentAnalysisService:
                     "You are a market research agent. Use only the provided context and summarize market size, growth, demand signals, policy context, and key risks in English.",
                 ),
                 ("human", "Domain: {domain}\nContext:\n{context}"),
+            ]
+        )
+        self.domain_extraction_prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "Extract the investment domain from the user query. Return structured output only. Keep the domain concise, specific, and useful for startup discovery search.",
+                ),
+                ("human", "User query:\n{query}"),
             ]
         )
         self.company_extraction_prompt = ChatPromptTemplate.from_messages(
@@ -280,6 +335,29 @@ class InvestmentAnalysisService:
     def discover_sources(self, state: GraphState) -> GraphState:
         state.source_files = [str(path) for path in self.source_files]
         return state
+
+    def extract_domain_from_query(self, query: str) -> str:
+        normalized_query = re.sub(r"\s+", " ", query).strip()
+        if not normalized_query:
+            return self.config.domain
+        structured_llm = self.llm.with_structured_output(QueryDomain)
+        try:
+            result = structured_llm.invoke(
+                self.domain_extraction_prompt.format_messages(query=normalized_query),
+                config=make_run_config(
+                    run_name="agents.extract_domain_from_query",
+                    tags=parse_tags(
+                        self.config.langsmith_tags,
+                        "agents",
+                        "query-understanding",
+                    ),
+                    metadata={"query_length": len(normalized_query)},
+                ),
+            )
+            extracted_domain = re.sub(r"\s+", " ", result.domain).strip()
+            return extracted_domain or self.config.domain
+        except Exception:
+            return self.config.domain
 
     def analyze_market(self, state: GraphState) -> GraphState:
         docs = []
@@ -307,13 +385,281 @@ class InvestmentAnalysisService:
         state.market_analysis = response.content
         return state
 
+    def discover_candidate_companies(self, state: GraphState) -> GraphState:
+        if not serpapi_client.available:
+            state.candidate_companies_raw = []
+            return state
+
+        discovery_hint = state.user_query.strip() or state.domain
+        queries = [
+            f"{discovery_hint} startups AI chip accelerator companies",
+            f"{discovery_hint} venture backed startups inference chip companies",
+            f"{discovery_hint} startup funding AI hardware accelerator",
+        ]
+        evidence: list[object] = []
+        for query in queries:
+            try:
+                evidence.extend(
+                    serpapi_client.search(
+                        query,
+                        category="candidate-discovery",
+                        days=1825,
+                    )
+                )
+            except Exception:
+                continue
+
+        if not evidence:
+            state.candidate_companies_raw = []
+            return state
+
+        discovery_context = "\n\n".join(
+            "\n".join(
+                [
+                    f"Title: {getattr(item, 'title', '')}",
+                    f"URL: {getattr(item, 'url', '')}",
+                    f"Snippet: {getattr(item, 'content', '')}",
+                ]
+            )
+            for item in evidence[:20]
+        )
+        structured_llm = self.llm.with_structured_output(CompanyList)
+        try:
+            result = structured_llm.invoke(
+                self.company_extraction_prompt.format_messages(context=discovery_context),
+                config=make_run_config(
+                    run_name="agents.discover_candidate_companies",
+                    tags=parse_tags(
+                        self.config.langsmith_tags,
+                        "agents",
+                        "candidate-discovery",
+                    ),
+                    metadata={"domain": state.domain, "query_count": len(queries)},
+                ),
+            )
+            discovered_names = result.companies
+        except Exception:
+            discovered_names = []
+
+        raw_candidates: list[dict[str, Any]] = []
+        seen_names: set[str] = set()
+        for name in discovered_names:
+            normalized = re.sub(r"\s+", " ", name).strip()
+            if not normalized or normalized.lower() in seen_names:
+                continue
+            supporting_item = next(
+                (
+                    item
+                    for item in evidence
+                    if normalized.lower() in (getattr(item, "title", "") or "").lower()
+                    or normalized.lower() in (getattr(item, "content", "") or "").lower()
+                ),
+                None,
+            )
+            raw_candidates.append(
+                CandidateCompanyRaw(
+                    name=normalized,
+                    source_url=getattr(supporting_item, "url", "") if supporting_item else "",
+                    source_title=getattr(supporting_item, "title", "") if supporting_item else "",
+                    snippet=getattr(supporting_item, "content", "") if supporting_item else "",
+                    discovery_query=queries[0],
+                ).model_dump()
+            )
+            seen_names.add(normalized.lower())
+        state.candidate_companies_raw = raw_candidates
+        return state
+
     def extract_companies(self, state: GraphState) -> GraphState:
-        state.companies = HARDCODED_AI_SEMICONDUCTOR_COMPANIES.copy()
+        if state.candidate_companies_filtered:
+            state.companies = [
+                item["name"]
+                for item in state.candidate_companies_filtered[:10]
+                if item.get("name")
+            ]
+        else:
+            state.companies = HARDCODED_AI_SEMICONDUCTOR_COMPANIES.copy()
+        return state
+
+    def normalize_and_filter_candidates(self, state: GraphState) -> GraphState:
+        filtered: list[dict[str, Any]] = []
+        seen_names: set[str] = set()
+
+        for item in state.candidate_companies_raw:
+            name = re.sub(r"\s+", " ", item.get("name", "")).strip(" -|:,;")
+            snippet = (item.get("snippet", "") or "").strip()
+            title = (item.get("source_title", "") or "").strip()
+            normalized_key = name.lower()
+
+            if not name or normalized_key in seen_names:
+                continue
+            if normalized_key in COMPANY_NAME_BLOCKLIST:
+                continue
+            if len(name) < 2 or len(name.split()) > 4:
+                continue
+            if any(token.isdigit() for token in name.split()):
+                continue
+            lowered_text = f"{title} {snippet}".lower()
+            if any(blocked in lowered_text for blocked in COMPANY_SNIPPET_BLOCKLIST):
+                continue
+            if not re.search(r"[A-Za-z]", name):
+                continue
+
+            filtered.append(
+                CandidateCompanyFiltered(
+                    name=name,
+                    source_url=item.get("source_url", ""),
+                    source_title=title,
+                    snippet=snippet,
+                    discovery_query=item.get("discovery_query", ""),
+                    filter_reason="matched startup-style candidate name from search evidence",
+                ).model_dump()
+            )
+            seen_names.add(normalized_key)
+
+        state.candidate_companies_filtered = filtered[:10]
+        return state
+
+    @staticmethod
+    def _infer_stage_from_text(text: str) -> str:
+        lowered = text.lower()
+        if "series c" in lowered or "series d" in lowered or "growth stage" in lowered:
+            return "Series C+"
+        if "series b" in lowered:
+            return "Series B"
+        if "series a" in lowered:
+            return "Series A"
+        if "seed" in lowered or "pre-seed" in lowered:
+            return "Seed"
+        return "Series A"
+
+    @staticmethod
+    def _format_candidate_evidence(item: dict[str, Any] | None) -> str:
+        if not item:
+            return ""
+        parts = [
+            f"Title: {item.get('source_title', '')}",
+            f"URL: {item.get('source_url', '')}",
+            f"Snippet: {item.get('snippet', '')}",
+            f"Filter reason: {item.get('filter_reason', '')}",
+        ]
+        return "\n".join(part for part in parts if part.strip())
+
+    @staticmethod
+    def _format_company_profile(profile: dict[str, Any]) -> str:
+        references = "\n".join(f"- {url}" for url in profile.get("references", []))
+        risks = "\n".join(f"- {risk}" for risk in profile.get("risks", []))
+        tags = ", ".join(profile.get("tags", []))
+        return "\n".join(
+            [
+                f"Company: {profile.get('name', '')}",
+                f"Stage: {profile.get('stage', '')}",
+                f"Industry: {profile.get('industry', '')}",
+                f"Business model: {profile.get('business_model', '')}",
+                f"Product summary: {profile.get('product_summary', '')}",
+                f"Customer focus: {profile.get('customer_focus', '')}",
+                f"Moat: {profile.get('moat', '')}",
+                f"Tags: {tags}",
+                f"Team signal: {profile.get('team_signal', '')}",
+                f"Market signal: {profile.get('market_signal', '')}",
+                f"Technology signal: {profile.get('technology_signal', '')}",
+                f"Traction signal: {profile.get('traction_signal', '')}",
+                f"Competition signal: {profile.get('competition_signal', '')}",
+                f"Risk signal: {profile.get('risk_signal', '')}",
+                "Risks:",
+                risks,
+                "References:",
+                references,
+            ]
+        ).strip()
+
+    def _fallback_company_profile(
+        self,
+        *,
+        domain: str,
+        company: str,
+        candidate_item: dict[str, Any] | None,
+        web_evidence: str,
+    ) -> dict[str, Any]:
+        combined_text = " ".join(
+            [
+                company,
+                candidate_item.get("snippet", "") if candidate_item else "",
+                candidate_item.get("source_title", "") if candidate_item else "",
+                web_evidence,
+            ]
+        )
+        references: list[str] = []
+        if candidate_item and candidate_item.get("source_url"):
+            references.append(candidate_item["source_url"])
+        references.extend(re.findall(r"https?://\S+", web_evidence))
+        unique_references: list[str] = []
+        for reference in references:
+            cleaned = reference.rstrip("),.]")
+            if cleaned and cleaned not in unique_references:
+                unique_references.append(cleaned)
+
+        return CompanyProfile(
+            name=company,
+            industry=domain,
+            stage=self._infer_stage_from_text(combined_text),
+            business_model=(candidate_item or {}).get("snippet", "")[:240],
+            product_summary=(candidate_item or {}).get("snippet", "")[:240],
+            customer_focus="Insufficient evidence from current search results.",
+            moat="Insufficient evidence from current search results.",
+            risks=["Limited verified evidence available from current search results."],
+            references=unique_references[:5],
+            tags=["ai-semiconductor", "startup"],
+        ).model_dump()
+
+    def enrich_company_profiles(self, state: GraphState) -> GraphState:
+        candidate_index = {
+            item["name"]: item
+            for item in state.candidate_companies_filtered
+            if item.get("name")
+        }
+        profiles: dict[str, dict[str, Any]] = {}
+
+        for company in state.companies[:10]:
+            candidate_item = candidate_index.get(company)
+            candidate_evidence = self._format_candidate_evidence(candidate_item)
+            web_evidence = self._search_company_web_context(company)
+            structured_llm = self.llm.with_structured_output(CompanyProfile)
+            try:
+                profile = structured_llm.invoke(
+                    self.company_profile_prompt.format_messages(
+                        domain=state.domain,
+                        company=company,
+                        candidate_evidence=candidate_evidence,
+                        web_evidence=web_evidence,
+                    ),
+                    config=make_run_config(
+                        run_name="agents.enrich_company_profile",
+                        tags=parse_tags(
+                            self.config.langsmith_tags,
+                            "agents",
+                            "company-profile",
+                        ),
+                        metadata={"domain": state.domain, "company": company},
+                    ),
+                )
+                profiles[company] = profile.model_dump()
+            except Exception:
+                profiles[company] = self._fallback_company_profile(
+                    domain=state.domain,
+                    company=company,
+                    candidate_item=candidate_item,
+                    web_evidence=web_evidence,
+                )
+
+        state.company_profiles = profiles
         return state
 
     def collect_company_contexts(self, state: GraphState) -> GraphState:
         company_contexts: dict[str, str] = {}
-        for company in state.companies:
+        target_companies = [
+            company for company in state.companies if company in state.company_profiles
+        ] or state.companies
+        for company in target_companies:
             docs = []
             if self.retriever is not None:
                 docs = self.retriever.invoke(
@@ -321,8 +667,13 @@ class InvestmentAnalysisService:
                 )
             local_context = self.format_docs(docs)
             web_context = self._search_company_web_context(company)
+            profile_context = ""
+            if company in state.company_profiles:
+                profile_context = self._format_company_profile(state.company_profiles[company])
             company_contexts[company] = "\n\n".join(
-                part for part in [local_context, web_context] if part
+                part
+                for part in [profile_context, local_context, web_context]
+                if part
             )
         state.company_contexts = company_contexts
         return state
@@ -457,11 +808,14 @@ class InvestmentAnalysisService:
     def investment_supervisor(self, state: GraphState) -> GraphState:
         product_market_results: dict[str, dict[str, Any]] = {}
         team_risk_competition_results: dict[str, dict[str, Any]] = {}
-        max_workers = min(len(state.companies), 4) or 1
+        target_companies = [
+            company for company in state.companies if company in state.company_profiles
+        ] or state.companies
+        max_workers = min(len(target_companies), 4) or 1
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
                 executor.submit(self.evaluate_company, state, company)
-                for company in state.companies
+                for company in target_companies
             ]
             for future in futures:
                 company, product_market, team_risk_competition = future.result()
@@ -472,38 +826,121 @@ class InvestmentAnalysisService:
         self._sync_legacy_dimension_fields(state)
         return state
 
-    def rank_companies(self, state: GraphState) -> GraphState:
-        structured_llm = self.llm.with_structured_output(CompanyEvaluation)
-        evaluations: list[dict[str, Any]] = []
-        for company in state.companies:
-            result = structured_llm.invoke(
-                self.ranking_prompt.format_messages(
-                    domain=state.domain,
-                    company=company,
-                    product_market_json=json.dumps(
-                        state.product_market_evaluations[company],
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
-                    team_risk_competition_json=json.dumps(
-                        state.team_risk_competition_evaluations[company],
-                        ensure_ascii=False,
-                        indent=2,
-                    ),
+    @staticmethod
+    def _normalize_stage(stage: str | None) -> str:
+        if stage in STAGE_WEIGHTS:
+            return stage
+        return "Series A"
+
+    def _build_company_scorecard(self, state: GraphState, company: str) -> dict[str, Any]:
+        product_market = ProductMarketEvaluation.model_validate(
+            state.product_market_evaluations[company]
+        )
+        team_risk_competition = TeamRiskCompetitionEvaluation.model_validate(
+            state.team_risk_competition_evaluations[company]
+        )
+        profile = CompanyProfile.model_validate(state.company_profiles[company])
+        stage = self._normalize_stage(profile.stage)
+        weights = STAGE_WEIGHTS[stage]
+
+        raw_scores = {
+            "technology_score": product_market.technology.score,
+            "market_score": product_market.market.score,
+            "business_score": product_market.business.score,
+            "team_score": team_risk_competition.team.score,
+            "risk_score": team_risk_competition.risk.score,
+            "competition_score": team_risk_competition.competition.score,
+        }
+        raw_total_score = sum(raw_scores.values())
+        weighted_total_score = round(
+            weighted_score(raw_scores["technology_score"], weights["technology"])
+            + weighted_score(raw_scores["market_score"], weights["market"])
+            + weighted_score(raw_scores["business_score"], weights["traction"])
+            + weighted_score(raw_scores["team_score"], weights["team"])
+            + weighted_score(raw_scores["risk_score"], weights["risk"])
+            + weighted_score(raw_scores["competition_score"], weights["competition"])
+        )
+
+        return {
+            "profile": profile,
+            "stage": stage,
+            "weights": weights,
+            "raw_scores": raw_scores,
+            "raw_total_score": raw_total_score,
+            "weighted_total_score": weighted_total_score,
+            "recommendation": to_recommendation(weighted_total_score),
+        }
+
+    def synthesize_company_decision(
+        self, state: GraphState, company: str
+    ) -> dict[str, Any]:
+        scorecard = self._build_company_scorecard(state, company)
+        structured_llm = self.llm.with_structured_output(CompanyDecisionSummary)
+        summary = structured_llm.invoke(
+            self.ranking_prompt.format_messages(
+                domain=state.domain,
+                company=company,
+                stage=scorecard["stage"],
+                weighted_total_score=scorecard["weighted_total_score"],
+                recommendation=scorecard["recommendation"],
+                product_market_json=json.dumps(
+                    state.product_market_evaluations[company],
+                    ensure_ascii=False,
+                    indent=2,
                 ),
-                config=make_run_config(
-                    run_name="agents.rank_company",
-                    tags=parse_tags(
-                        self.config.langsmith_tags,
-                        "agents",
-                        "ranking",
-                    ),
-                    metadata={"domain": state.domain, "company": company},
+                team_risk_competition_json=json.dumps(
+                    state.team_risk_competition_evaluations[company],
+                    ensure_ascii=False,
+                    indent=2,
                 ),
-            )
-            item = result.model_dump()
-            item["total_score"] = result.total_score
-            evaluations.append(item)
+            ),
+            config=make_run_config(
+                run_name="agents.summarize_company_decision",
+                tags=parse_tags(
+                    self.config.langsmith_tags,
+                    "agents",
+                    "decision-summary",
+                ),
+                metadata={
+                    "domain": state.domain,
+                    "company": company,
+                    "stage": scorecard["stage"],
+                    "weighted_total_score": scorecard["weighted_total_score"],
+                },
+            ),
+        )
+        evaluation = CompanyEvaluation(
+            company_name=company,
+            stage=scorecard["stage"],
+            recommendation=scorecard["recommendation"],
+            thesis=summary.thesis,
+            technology_score=scorecard["raw_scores"]["technology_score"],
+            market_score=scorecard["raw_scores"]["market_score"],
+            business_score=scorecard["raw_scores"]["business_score"],
+            team_score=scorecard["raw_scores"]["team_score"],
+            risk_score=scorecard["raw_scores"]["risk_score"],
+            competition_score=scorecard["raw_scores"]["competition_score"],
+            raw_total_score=scorecard["raw_total_score"],
+            weighted_total_score=scorecard["weighted_total_score"],
+            strengths=summary.strengths,
+            risks=summary.risks,
+            diligence_questions=summary.diligence_questions,
+        )
+        item = evaluation.model_dump()
+        item["total_score"] = evaluation.total_score
+        return item
+
+    def synthesize_company_decisions(self, state: GraphState) -> GraphState:
+        target_companies = [
+            company for company in state.companies if company in state.company_profiles
+        ] or state.companies
+        max_workers = min(len(target_companies), 4) or 1
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [
+                executor.submit(self.synthesize_company_decision, state, company)
+                for company in target_companies
+            ]
+            evaluations = [future.result() for future in futures]
         state.evaluations = sorted(
             evaluations,
             key=lambda item: item["total_score"],
@@ -643,21 +1080,27 @@ class InvestmentAnalysisService:
         workflow = StateGraph(GraphState)
         workflow.add_node("discover_sources", self.discover_sources)
         workflow.add_node("analyze_market", self.analyze_market)
+        workflow.add_node("discover_candidate_companies", self.discover_candidate_companies)
+        workflow.add_node("normalize_and_filter_candidates", self.normalize_and_filter_candidates)
         workflow.add_node("extract_companies", self.extract_companies)
+        workflow.add_node("enrich_company_profiles", self.enrich_company_profiles)
         workflow.add_node("collect_company_contexts", self.collect_company_contexts)
         workflow.add_node("investment_supervisor", self.investment_supervisor)
-        workflow.add_node("rank_companies", self.rank_companies)
+        workflow.add_node("synthesize_company_decisions", self.synthesize_company_decisions)
         workflow.add_node("apply_investment_policy", self.apply_investment_policy)
         workflow.add_node("generate_investment_report", self.generate_investment_report)
         workflow.add_node("generate_hold_report", self.generate_hold_report)
 
         workflow.set_entry_point("discover_sources")
         workflow.add_edge("discover_sources", "analyze_market")
-        workflow.add_edge("analyze_market", "extract_companies")
-        workflow.add_edge("extract_companies", "collect_company_contexts")
+        workflow.add_edge("analyze_market", "discover_candidate_companies")
+        workflow.add_edge("discover_candidate_companies", "normalize_and_filter_candidates")
+        workflow.add_edge("normalize_and_filter_candidates", "extract_companies")
+        workflow.add_edge("extract_companies", "enrich_company_profiles")
+        workflow.add_edge("enrich_company_profiles", "collect_company_contexts")
         workflow.add_edge("collect_company_contexts", "investment_supervisor")
-        workflow.add_edge("investment_supervisor", "rank_companies")
-        workflow.add_edge("rank_companies", "apply_investment_policy")
+        workflow.add_edge("investment_supervisor", "synthesize_company_decisions")
+        workflow.add_edge("synthesize_company_decisions", "apply_investment_policy")
         workflow.add_conditional_edges(
             "apply_investment_policy",
             self.route_after_policy,
@@ -670,15 +1113,23 @@ class InvestmentAnalysisService:
         workflow.add_edge("generate_hold_report", END)
         return workflow.compile()
 
-    def run(self, domain: str | None = None) -> GraphState:
+    def run(self, query: str | None = None, domain: str | None = None) -> GraphState:
         graph = self.build_graph()
-        initial_state = GraphState(domain=domain or self.config.domain)
+        normalized_query = re.sub(r"\s+", " ", (query or "")).strip()
+        resolved_domain = domain or self.extract_domain_from_query(normalized_query)
+        initial_state = GraphState(
+            domain=resolved_domain,
+            user_query=normalized_query,
+        )
         result = graph.invoke(
             initial_state,
             config=make_run_config(
                 run_name="agents.investment_analysis",
                 tags=parse_tags(self.config.langsmith_tags, "agents", "graph"),
-                metadata={"domain": initial_state.domain},
+                metadata={
+                    "domain": initial_state.domain,
+                    "user_query": initial_state.user_query,
+                },
             ),
         )
         if isinstance(result, GraphState):
