@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 import json
 import os
@@ -284,12 +285,12 @@ class InvestmentAnalysisService:
                 ),
             ]
         )
-        self.report_prompt = ChatPromptTemplate.from_messages(
+        self.report_polish_prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", self.load_prompt("final_report_prompt.md")),
+                ("system", self.load_prompt("report_polish_prompt.md")),
                 (
                     "human",
-                    "Domain: {domain}\nMarket analysis:\n{market_analysis}\nPolicy decision: {policy_decision}\nPolicy reason: {policy_reason}\nEvaluation JSON:\n{evaluations_json}\nSelected companies JSON:\n{selected_json}\nHold companies JSON:\n{hold_json}",
+                    "Domain: {domain}\nPolicy decision: {policy_decision}\nDraft report markdown:\n{draft_report}",
                 ),
             ]
         )
@@ -925,58 +926,263 @@ class InvestmentAnalysisService:
     def route_after_policy(self, state: GraphState) -> str:
         return state.policy_decision or "hold"
 
-    def _write_common_outputs(self, state: GraphState, timestamp: str) -> None:
-        market_output_path = self.output_dir / f"market_analysis_{timestamp}.md"
-        evaluations_output_path = self.output_dir / f"evaluations_{timestamp}.json"
-        agent_output_path = self.output_dir / f"agent_evaluations_{timestamp}.json"
-        policy_output_path = self.output_dir / f"policy_decision_{timestamp}.json"
+    @staticmethod
+    def _resolve_report_score(item: dict[str, Any]) -> Any:
+        return (
+            item.get("total_score")
+            if item.get("total_score") is not None
+            else item.get("weighted_total_score")
+            if item.get("weighted_total_score") is not None
+            else item.get("raw_total_score")
+        )
 
-        market_output_path.write_text(state.market_analysis, encoding="utf-8")
-        evaluations_output_path.write_text(
-            json.dumps(state.evaluations, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
-        agent_output_path.write_text(
-            json.dumps(
+    def _build_report_input(self, state: GraphState) -> dict[str, Any]:
+        market_analysis = state.market_analysis or ""
+        market_summary = market_analysis[:1200]
+
+        ranking_table: list[dict[str, Any]] = []
+        for index, item in enumerate(state.evaluations or [], start=1):
+            ranking_table.append(
                 {
-                    "product_market": state.product_market_evaluations,
-                    "team_risk_competition": state.team_risk_competition_evaluations,
-                },
-                ensure_ascii=False,
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
-        policy_output_path.write_text(
-            json.dumps(
+                    "rank": index,
+                    "company": item.get("company_name", ""),
+                    "stage": item.get("stage", ""),
+                    "score": self._resolve_report_score(item),
+                    "recommendation": item.get("recommendation", ""),
+                }
+            )
+
+        top_companies: list[dict[str, Any]] = []
+        for item in state.selected_companies or []:
+            top_companies.append(
                 {
-                    "decision": state.policy_decision,
-                    "reason": state.policy_reason,
-                    "selected_companies": state.selected_companies,
-                    "hold_companies": state.hold_companies,
-                },
-                ensure_ascii=False,
-                indent=2,
-            ),
-            encoding="utf-8",
+                    "company": item.get("company_name", ""),
+                    "stage": item.get("stage", ""),
+                    "score": self._resolve_report_score(item),
+                    "recommendation": item.get("recommendation", ""),
+                    "thesis": item.get("thesis", ""),
+                    "strengths": (item.get("strengths") or [])[:3],
+                    "risks": (item.get("risks") or [])[:3],
+                    "diligence_questions": (item.get("diligence_questions") or [])[:5],
+                }
+            )
+
+        hold_companies = state.hold_companies or []
+        hold_names = [
+            item.get("company_name", "")
+            for item in hold_companies
+            if item.get("company_name")
+        ][:10]
+        risk_counter: Counter[str] = Counter()
+        for item in hold_companies:
+            for risk in item.get("risks") or []:
+                normalized_risk = re.sub(r"\s+", " ", str(risk)).strip()
+                if normalized_risk:
+                    risk_counter[normalized_risk] += 1
+
+        return {
+            "domain": state.domain,
+            "policy_decision": state.policy_decision,
+            "policy_reason": state.policy_reason,
+            "market_summary": market_summary,
+            "ranking_table": ranking_table,
+            "top_companies": top_companies,
+            "hold_summary": {
+                "count": len(hold_companies),
+                "company_names": hold_names,
+                "common_risks": [risk for risk, _ in risk_counter.most_common(5)],
+            },
+        }
+
+    @staticmethod
+    def _format_markdown_bullets(items: list[str], empty_text: str = "- 없음") -> str:
+        cleaned = [
+            re.sub(r"\s+", " ", str(item)).strip()
+            for item in items
+            if re.sub(r"\s+", " ", str(item)).strip()
+        ]
+        if not cleaned:
+            return empty_text
+        return "\n".join(f"- {item}" for item in cleaned)
+
+    @staticmethod
+    def _join_korean(items: list[str]) -> str:
+        cleaned = [
+            re.sub(r"\s+", " ", str(item)).strip()
+            for item in items
+            if re.sub(r"\s+", " ", str(item)).strip()
+        ]
+        if not cleaned:
+            return ""
+        if len(cleaned) == 1:
+            return cleaned[0]
+        return ", ".join(cleaned[:-1]) + f" 및 {cleaned[-1]}"
+
+    def _build_report_draft(self, state: GraphState) -> str:
+        report_input = self._build_report_input(state)
+        top_companies = report_input.get("top_companies", [])
+        ranking_table = report_input.get("ranking_table", [])
+        hold_summary = report_input.get("hold_summary", {})
+        selected_names = [
+            item.get("company", "")
+            for item in top_companies
+            if item.get("company")
+        ]
+        policy_decision = report_input.get("policy_decision", "") or "미정"
+        policy_reason = report_input.get("policy_reason", "") or "사유 없음"
+        selected_name_text = self._join_korean(selected_names)
+        executive_summary = "\n".join(
+            [
+                f"이번 검토의 정책 결정은 **{policy_decision}**입니다.",
+                f"판단 배경은 다음과 같습니다. {policy_reason}",
+                (
+                    f"최종 추천 후보는 {selected_name_text}이며, 각 기업은 시장 적합성, 기술 경쟁력, 상업화 가능성, 팀 역량 및 리스크 측면에서 상대 우위를 보였습니다."
+                    if selected_name_text
+                    else "이번 검토에서는 즉시 추천 가능한 후보를 특정하지 못했습니다."
+                ),
+            ]
+        )
+
+        ranking_rows = [
+            "| Rank | Company | Stage | Score | Recommendation |",
+            "|---|---|---|---:|---|",
+        ]
+        for item in ranking_table:
+            ranking_rows.append(
+                "| {rank} | {company} | {stage} | {score} | {recommendation} |".format(
+                    rank=item.get("rank", ""),
+                    company=item.get("company", ""),
+                    stage=item.get("stage", ""),
+                    score=item.get("score", ""),
+                    recommendation=item.get("recommendation", ""),
+                )
+            )
+        ranking_table_markdown = (
+            "\n".join(ranking_rows)
+            if len(ranking_rows) > 2
+            else "순위 데이터가 충분하지 않습니다."
+        )
+        ranking_intro = (
+            "아래 순위표는 회사별 가중 점수와 추천 등급을 기준으로 정리한 결과입니다. "
+            "초기 단계 기업은 팀과 기술 비중이 높고, 후속 단계 기업은 상업화와 실행 안정성 비중이 상대적으로 높게 반영됩니다."
+        )
+
+        top_sections: list[str] = []
+        for index, item in enumerate(top_companies, start=1):
+            company = item.get("company", "Unknown Company")
+            stage = item.get("stage", "")
+            score = item.get("score", "")
+            recommendation = item.get("recommendation", "")
+            thesis = item.get("thesis", "")
+            strengths = item.get("strengths", []) or []
+            risks = item.get("risks", []) or []
+            diligence_questions = item.get("diligence_questions", []) or []
+            strengths_text = self._join_korean(strengths[:3])
+            risks_text = self._join_korean(risks[:3])
+            top_sections.append(
+                "\n".join(
+                    [
+                        f"### {index}. {company}",
+                        (
+                            f"{company}는 **{stage}** 단계 기업으로, 종합 점수 **{score}점**과 **{recommendation}** 의견을 받았습니다. "
+                            f"핵심 투자 논지는 다음과 같습니다. {thesis}"
+                        ),
+                        (
+                            f"주요 강점은 {strengths_text}입니다."
+                            if strengths_text
+                            else "주요 강점은 추가 확인이 필요합니다."
+                        ),
+                        (
+                            f"반면 유의해야 할 핵심 리스크는 {risks_text}입니다."
+                            if risks_text
+                            else "현재 확인된 핵심 리스크는 제한적입니다."
+                        ),
+                        "- Strengths:",
+                        self._format_markdown_bullets(strengths),
+                        "- Risks:",
+                        self._format_markdown_bullets(risks),
+                        "- Diligence Questions:",
+                        self._format_markdown_bullets(
+                            diligence_questions,
+                            empty_text="- 추가 질문 없음",
+                        ),
+                    ]
+                )
+            )
+        top_recommendations = (
+            "\n\n".join(top_sections)
+            if top_sections
+            else "추천 가능한 기업이 없어 상세 추천 섹션을 생략합니다."
+        )
+
+        hold_names = hold_summary.get("company_names", []) or []
+        common_risks = hold_summary.get("common_risks", []) or []
+        hold_name_text = self._join_korean(hold_names)
+        common_risks_text = self._join_korean(common_risks)
+        hold_section = "\n".join(
+            [
+                (
+                    f"보류 또는 관찰 대상으로 분류된 기업은 총 {hold_summary.get('count', 0)}개입니다."
+                ),
+                (
+                    f"해당 기업은 {hold_name_text}입니다."
+                    if hold_name_text
+                    else "현재 보류 대상 기업 목록은 비어 있습니다."
+                ),
+                (
+                    f"이들 기업에서 반복적으로 관찰된 리스크는 {common_risks_text}입니다."
+                    if common_risks_text
+                    else "반복적으로 확인된 공통 리스크는 제한적입니다."
+                ),
+                "- 공통 리스크 세부 항목:",
+                self._format_markdown_bullets(common_risks),
+            ]
+        )
+
+        next_steps_candidates: list[str] = []
+        for item in top_companies:
+            company = item.get("company", "")
+            questions = item.get("diligence_questions", []) or []
+            if company and questions:
+                next_steps_candidates.append(f"{company}: {questions[0]}")
+
+        market_overview = (
+            report_input.get("market_summary", "") or "시장 요약 정보가 충분하지 않습니다."
+        )
+        key_risks_intro = (
+            "상위 추천 기업과 보류 기업을 함께 검토했을 때, 공통적으로 점검해야 할 위험 요인은 다음과 같습니다."
+            if common_risks
+            else "현재 데이터 기준으로 공통 리스크는 제한적으로 관찰되며, 개별 기업별 실사가 더 중요합니다."
+        )
+
+        return "\n\n".join(
+            [
+                f"# {state.domain} 투자 검토 보고서",
+                "## Executive Summary\n" + executive_summary,
+                "## Market Overview\n" + market_overview,
+                "## Company Ranking\n" + ranking_intro + "\n\n" + ranking_table_markdown,
+                "## Top Recommendations\n" + top_recommendations,
+                "## Hold / Watchlist\n" + hold_section,
+                "## Key Risks\n"
+                + key_risks_intro
+                + "\n\n"
+                + self._format_markdown_bullets(common_risks),
+                "## Next Diligence Steps\n"
+                + "우선순위가 높은 추천 기업부터 아래 항목을 중심으로 추가 실사를 진행하는 것이 적절합니다.\n\n"
+                + self._format_markdown_bullets(
+                    next_steps_candidates,
+                    empty_text="- 추가 실사 항목 없음",
+                ),
+            ]
         )
 
     def generate_investment_report(self, state: GraphState) -> GraphState:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self._write_common_outputs(state, timestamp)
+        draft_report = self._build_report_draft(state)
         report = self.llm.invoke(
-            self.report_prompt.format_messages(
+            self.report_polish_prompt.format_messages(
                 domain=state.domain,
-                market_analysis=state.market_analysis,
                 policy_decision=state.policy_decision,
-                policy_reason=state.policy_reason,
-                evaluations_json=json.dumps(
-                    state.evaluations, ensure_ascii=False, indent=2
-                ),
-                selected_json=json.dumps(
-                    state.selected_companies, ensure_ascii=False, indent=2
-                ),
-                hold_json=json.dumps(state.hold_companies, ensure_ascii=False, indent=2),
+                draft_report=draft_report,
             ),
             config=make_run_config(
                 run_name="agents.generate_investment_report",
@@ -989,15 +1195,13 @@ class InvestmentAnalysisService:
                 metadata={"selected_company_count": len(state.selected_companies)},
             ),
         )
-        output_path = self.output_dir / f"investment_report_{timestamp}.md"
-        output_path.write_text(report.content, encoding="utf-8")
         state.final_report = report.content
-        state.output_path = str(output_path)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = self.output_dir / f"final_report_{timestamp}.md"
+        output_path.write_text(state.final_report, encoding="utf-8")
         return state
 
     def generate_hold_report(self, state: GraphState) -> GraphState:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self._write_common_outputs(state, timestamp)
         report = self.llm.invoke(
             self.hold_report_prompt.format_messages(
                 domain=state.domain,
@@ -1016,10 +1220,10 @@ class InvestmentAnalysisService:
                 metadata={"hold_company_count": len(state.hold_companies)},
             ),
         )
-        output_path = self.output_dir / f"hold_report_{timestamp}.md"
-        output_path.write_text(report.content, encoding="utf-8")
         state.final_report = report.content
-        state.output_path = str(output_path)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = self.output_dir / f"final_report_{timestamp}.md"
+        output_path.write_text(state.final_report, encoding="utf-8")
         return state
 
     def build_graph(self):

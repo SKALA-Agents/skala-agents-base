@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from agents import InvestmentAnalysisService, ServiceConfig
 
 
-NOTEBOOK_PATH = Path(__file__).resolve().parent / "notebooks" / "investment_report_service.ipynb"
 DEFAULT_QUERY = "AI 반도체 스타트업을 투자하고 싶은데 투자 가치가 있는 기업을 찾아줘"
 
 
@@ -24,12 +23,10 @@ def main() -> None:
     print(args.query)
     print("Resolved domain:")
     print(result.domain)
-    print("Notebook path:")
-    print(NOTEBOOK_PATH)
     print("Policy decision:")
     print(result.policy_decision)
-    print("Report path:")
-    print(result.output_path)
+    print("Final report preview:")
+    print(result.final_report[:1000])
 
 
 if __name__ == "__main__":

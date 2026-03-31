@@ -148,4 +148,3 @@ class GraphState(BaseModel):
     policy_decision: str = ""
     policy_reason: str = ""
     final_report: str = ""
-    output_path: str = ""
